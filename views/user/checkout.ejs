@@ -1,0 +1,717 @@
+<%- include('partials/userheader.ejs') %>
+
+<!-- MDB -->
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.css"
+  rel="stylesheet"
+/>
+
+<section
+  class="bg-img1 txt-center p-lr-15 p-tb-92"
+  style="background-image: url('/user/images/bg-01.jpg')"
+>
+  <h2 class="ltext-105 cl0 txt-center">Checkout</h2>
+</section>
+
+<div class="constainer pt-5" style="background-color: #eee">
+  <div class="row">
+    <div class="col-lg-5 pt-5">
+      <% if (address) { %>
+      <h2
+        style="font-family: serif; margin-left: 195px; margin-bottom: 96px"
+        class="align-items-center"
+      >
+        Select Your Address
+      </h2>
+      <!--Section: Design Block-->
+      <section>
+        <% for( let i = 0; i < add.length; i++ ) { %>
+
+        <div class="card mb-4 accordion" id="accordionExample">
+          <div class="card body accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <div
+                class="accordion-button collapsed text-uppercase text-font h4"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#collapseOne<%= add[i]._id %> "
+                aria-expanded="false"
+                aria-controls="collapseOne"
+              >
+                <label class="form-check">
+                  <% if (i==0) { %>
+                  <label class="d-flex">
+                    <input
+                      type="radio"
+                      aria-label="Radio button for following text input"
+                      name="address"
+                      id="<%= add[i]._id %> "
+                      value="<%= i %>"
+                      onclick="placeorder()"
+                      checked
+                    />
+                    <%= add[i].fullname %>
+                  </label>
+                  <% } else { %>
+                  <label class="d-flex">
+                    <input
+                      type="radio"
+                      aria-label="Radio button for following text input"
+                      name="address"
+                      id="<%= add[i]._id %> "
+                      value="<%=i %>"
+                    />
+                    <%= add[i].fullname %>
+                  </label>
+                  <% } %>
+                </label>
+              </div>
+            </h2>
+            <div
+              id="collapseOne<%= add[i]._id %>"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingOne"
+              data-mdb-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <div class="form-outline d-flex">
+                  Name :<%= add[i].fullname %> <br />
+                  Number :<%= add[i].phone %> <br />
+                  Address:<%= add[i].address %> <br />
+                  Street :<% add[i].street %> <br />
+                  City :<%= add[i].city %> <br />
+                  State :<%= add[i].state %> <br />
+                  Pincode:<%= add[i].pincode %> <br />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <% } %>
+
+        <div>
+          <a
+            href="/address"
+            class="btn btn-success btn-lg"
+            style="margin-left: 235px; margin-top: 50px"
+            >Add Address</a
+          >
+        </div>
+
+        <div
+          class="flex-w flex-sb-m bor15 p-t-18 p-b-15 p-lr-20 p-lr-15-sm pt-5"
+        >
+          <div class="flex-w flex-m m-r-20 m-tb-5">
+            <input
+              class="stext-104 cl2 plh4 size-117 bor13 p-lr-10 m-tb-5"
+              type="text"
+              name="coupon"
+              placeholder="Coupon Code"
+              id="coupons1234"
+              value="AXX486674"
+            />
+          </div>
+
+          <div>
+            <button
+              class="flex-c-m stext-101 cl2 size-118 bg8 bor13 hov-btn3 m-r-15 trans-04 pointer m-tb-5"
+              onclick="applycoupon('<%=cartdt.carttotal%>')"
+            >
+              Apply coupon
+            </button>
+          </div>
+          <p id="newdanger"></p>
+        </div>
+        <!-- <div class="col-md-8 mb-4">
+                      <div class="card mb-4">
+                        <div class="card-header py-3">
+                          <h5 class="mb-0 text-font text-uppercase">Delivery address</h5>
+                        </div>
+                        <div class="card-body">
+                          <form>
+              
+                            <div class="row mb-4">
+                              <div class="col">
+                                <div class="form-outline">
+                                  <input type="text" id="form11Example1" class="form-control" />
+                                  <label class="form-label" for="form11Example1">First name</label>
+                                </div>
+                              </div>
+                              <div class="col">
+                                <div class="form-outline">
+                                  <input type="text" id="form11Example2" class="form-control" />
+                                  <label class="form-label" for="form11Example2">Last name</label>
+                                </div>
+                              </div>
+                            </div>
+              
+                            <div class="form-outline mb-4">
+                              <input type="text" id="form11Example3" class="form-control" />
+                              <label class="form-label" for="form11Example3">Company name</label>
+                            </div>
+              
+                            <div class="form-outline mb-4">
+                              <input type="text" id="form11Example4" class="form-control" />
+                              <label class="form-label" for="form11Example4">Address</label>
+                            </div>
+              
+                            <div class="form-outline mb-4">
+                              <input type="email" id="form11Example5" class="form-control" />
+                              <label class="form-label" for="form11Example5">Email</label>
+                            </div>
+              
+                            <div class="form-outline mb-4">
+                              <input type="number" id="form11Example6" class="form-control" />
+                              <label class="form-label" for="form11Example6">Phone</label>
+                            </div>
+              
+                            <div class="form-outline mb-4">
+                              <textarea class="form-control" id="form11Example7" rows="4"></textarea>
+                              <label class="form-label" for="form11Example7">Additional information</label>
+                            </div>
+              
+                            <div class="form-check d-flex justify-content-center mb-2">
+                              <input class="form-check-input me-2" type="checkbox" value="" id="form11Example8" checked />
+                              <label class="form-check-label" for="form11Example8">
+                                Create an account?
+                              </label>
+                            </div>
+                          </form>
+                        </div>
+              
+                      </div>
+                      <div class="text-center">
+                        <button type="button" class="btn button-order col-md-10">Place order</button>
+                      </div>
+              
+                    </div> -->
+      </section>
+
+      <%} else{ %>
+      <h3 style="padding-left: 200px">Pls Add Address!</h3>
+      <div>
+        <a
+          href="/address"
+          class="btn btn-success btn-lg"
+          style="margin-left: 235px; margin-top: 50px"
+          >Add Address</a
+        >
+      </div>
+      <% } %>
+      <!--Section: Design Block-->
+    </div>
+    <div class="col-lg-6">
+      <h2
+        style="font-family: serif; margin-left: 380px; margin-top: 45px"
+        class="align-items-center"
+      >
+        Cart Items
+      </h2>
+
+      <section class="h-100 h-custom">
+        <div class="container h-100 py-5">
+          <div
+            class="row d-flex justify-content-center align-items-center h-100"
+          >
+            <div class="col">
+              <div class="table-responsive">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="h5">Shopping Bag</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Quantity</th>
+                      <th scope="col">Total</th>
+                    </tr>
+                  </thead>
+                  <% for( let i = 0; i < pic.length; i++ ) { %>
+                  <tbody>
+                    <tr>
+                      <th scope="row">
+                        <div class="d-flex align-items-center">
+                          <img
+                            src="/image/<%= pic[i].product.images[0].filename %>  "
+                            class="img-fluid rounded-3"
+                            style="width: 120px"
+                            alt="Book"
+                          />
+                          <div class="flex-column ms-4">
+                            <p class="mb-2">
+                              <%=pic[i].product.product_name %>
+                            </p>
+                            <!-- <p class="mb-0">Daniel Kahneman</p> -->
+                          </div>
+                        </div>
+                      </th>
+
+                      <td class="align-middle">
+                        <p><%= pic[i].price%></p>
+                      </td>
+                      <td class="align-middle">
+                        <p>* <%= pic[i].quantity %></p>
+                      </td>
+                      <td class="align-middle">
+                        <p style="font-weight: 500"><%=pic[i].total %></p>
+                      </td>
+                    </tr>
+                    <tr style="color: black">
+                      <th colspan="3">Cutoff</th>
+                      <th id="cutoff"></th>
+                    </tr>
+                    <tr style="color: black">
+                      <th colspan="3">Grand Total</th>
+                      <th id="grandtotal"><%=pic[i].total %></th>
+                    </tr>
+                  </tbody>
+                  <% } %>
+                </table>
+              </div>
+
+              <div class="card" style="border-radius: 16px">
+                <div class="card-body">
+                  <div class="row">
+                    <form class="d-flex justify-content-between">
+                      <div class="d-flex flex-row pb-3">
+                        <div class="d-flex align-items-center pe-2">
+                          <input
+                            type="checkbox"
+                            name="checking"
+                            onclick="onlyOne(this)"
+                            value="cod"
+                            checked
+                          />
+                        </div>
+                        <div class="rounded border w-100 p-3 btn btn-success">
+                          <p class="d-flex align-items-center mb-0">
+                            <i class="fa fa-credit-card text-dark pe-2"></i>Cash
+                            On Delivery
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="d-flex flex-row pb-3">
+                        <div class="d-flex align-items-center pe-2">
+                          <input
+                            type="checkbox"
+                            name="checking"
+                            value="wallet"
+                            onclick="onlyOne(this)"
+                          />
+                        </div>
+                        <div class="rounded border w-100 p-3 btn btn-success">
+                          <p class="d-flex align-items-center mb-0">
+                            <i class='fas fa-wallet' style="color: black;margin-right: 10px;"></i>Wallet
+                          </p>
+                        </div>
+                      </div>
+
+                      <div class="d-flex flex-row pb-3">
+                        <div class="d-flex align-items-center pe-2">
+                          <input
+                            type="checkbox"
+                            name="checking"
+                            value="paypal"
+                            onclick="onlyOne(this)"
+                          />
+                        </div>
+                        <div class="rounded border w-100 p-3 btn btn-success">
+                          <p class="d-flex align-items-center mb-0">
+                            <i
+                              class="fab fa-cc-paypal fa-2x fa-lg text-dark pe-2"
+                            ></i
+                            >PayPal
+                          </p>
+                        </div>
+                        <div id="paypal-button-container"></div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+                <% if (address) { %>
+                <a
+                  class="btn btn-warning btn-lg"
+                  type="button"
+                  onclick="placeorder()"
+                  >Place Order</a
+                >
+
+                <% } else { %>
+                <a class="btn btn-warning btn-lg" type="button"
+                  >Pls Add Address And Comeback</a
+                >
+
+                <% } %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<section style="background-color: #eee">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12">
+        <div class="card card-stepper text-black" style="border-radius: 16px">
+          <div class="card-body p-5">
+            <ul
+              id="progressbar-2"
+              class="d-flex justify-content-between mx-0 mt-0 mb-5 px-0 pt-0 pb-2"
+            >
+              <li class="step0 active text-center" id="step1"></li>
+              <li class="step0 text-center" id="step4"></li>
+              <li class="step0 text-center" id="step4"></li>
+              <li class="step0 text-muted text-end" id="step4"></li>
+            </ul>
+
+            <div class="d-flex justify-content-between">
+              <div class="d-lg-flex align-items-center">
+                <i class="fas fa-clipboard-list fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                <div>
+                  <p class="fw-bold mb-1">Cart</p>
+                  <p class="fw-bold mb-0">Processed</p>
+                </div>
+              </div>
+              <div class="d-lg-flex align-items-center">
+                <i class="fas fa-box-open fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                <div>
+                  <p class="fw-bold mb-1">Order</p>
+                  <p class="fw-bold mb-0">Placing</p>
+                </div>
+              </div>
+              <div class="d-lg-flex align-items-center">
+                <i class="fas fa-shipping-fast fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                <div>
+                  <p class="fw-bold mb-1">Order</p>
+                  <p class="fw-bold mb-0">En Route</p>
+                </div>
+              </div>
+              <div class="d-lg-flex align-items-center">
+                <i class="fas fa-home fa-3x me-lg-4 mb-3 mb-lg-0"></i>
+                <div>
+                  <p class="fw-bold mb-1">Order</p>
+                  <p class="fw-bold mb-0">Arrived</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script
+  src="https://www.paypal.com/sdk/js?client-id=<%= idPaypal %>"
+  data-namespace="paypal_sdk"
+></script>
+<script
+  src="https://code.jquery.com/jquery-3.6.3.js"
+  integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+  crossorigin="anonymous"
+></script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+        crossorigin="anonymous"></script> -->
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  function onlyOne(checkbox) {
+    var checkboxes = document.getElementsByName("checking");
+    checkboxes.forEach((item) => {
+      if (item !== checkbox) item.checked = false;
+    });
+  }
+</script>
+
+<script>
+  let coupamount;
+  let orderdata;
+  let totalpayment;
+  let coupencode
+  let walletbalance
+  async function applycoupon(ctotal) {
+    coupencode = document.getElementById("coupons1234").value;
+    
+    console.log(ctotal, coupencode, "asdfghjkl;");
+
+    const res = await axios({
+      method: "post",
+      url: "/verifycoupon",
+      data: {
+        ctotal,
+        coupencode,
+      },
+    }).then((response) => {
+      if (response.data.used) {
+        Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Coupon Already Used",
+          });
+      }else if (response.data.status) {
+        document.getElementById("newdanger").style.color = "green";
+        document.getElementById("newdanger").innerHTML = "Coupon Applied";
+        coupamount = response.data.amount;
+        document.getElementById("grandtotal").innerHTML =
+          response.data.grandtotal;
+        document.getElementById("cutoff").innerHTML = response.data.amount;
+      } else {
+        document.getElementById("newdanger").style.color = "red";
+        document.getElementById("newdanger").innerHTML = response.data.msg;
+      }
+    })
+  }
+  async function placeorder() {
+    console.log("its placing an order");
+
+    const address = $('input[type="radio"][name="address"]:checked').val();
+    const payment = $('input[type="checkbox"][name="checking"]:checked').val();
+
+    console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;", address);
+    console.log("..................................;", payment);
+
+    const response = await axios({
+      method: "post",
+      url: "/payment",
+      data: {
+        address,
+        payment,
+        coupamount,
+        coupencode,
+      },
+    }).then(async (response) => {
+      console.log(response);
+      if (response.data.Outstock) {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Product Out Of Stock",
+          });
+        }
+      else if (response.data.cashondelivery) {
+        Swal.fire({
+          icon: "success",
+          title: "Order Placed Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+       
+        location.href = "/order";
+      } else if (response.data.paypal) {
+        totalpayment = response.data.afteramount;
+        orderdata = response.data.orderdata;
+        paypal_sdk
+          .Buttons({
+            createOrder: function () {
+              return fetch("/paypalorder", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  items: [
+                    {
+                      id: 1,
+                      amount: totalpayment,
+                    },
+                    { id: 2, amount: totalpayment },
+                  ],
+                }),
+              })
+                .then((res) => {
+                  console.log("came");
+                  if (res.ok) return res.json();
+                  console.log(res.json());
+                  return res.json().then((json) => Promise.reject(json));
+                })
+                .then(({ id }) => {
+                  console.log("pp");
+                  return id;
+                })
+                .catch((e) => {
+                  console.log("//// ");
+                  console.error(e);
+                });
+            },
+            onApprove: function (data, actions) {
+              console.log(data, "///////////,,,");
+              console.log(actions, ";;;;;;;");
+              return actions.order.capture().then(function (details) {
+                console.log(response, "//////////");
+                verifyPayment(response);
+                
+              });
+            },
+          })
+          .render("#paypal-button-container");
+
+      }else if(response.data.wallet){
+        Swal.fire({
+          icon: "success",
+          title: "Order Placed Successfully",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        
+        location.href = "/order";
+      }else if(response.data.empty){
+        Swal.fire({
+            icon: "error",
+            title: "Oops...Wallet Is Empty",
+            text: "Wallet Is Empty",
+          });
+      }else if(response.data.amountout){
+        Swal.fire({
+            icon: "error",
+            title: "Wallet Have Not Enough Money",
+            text: "Use Paypal to Pay Balance Amount",
+          });
+      }
+    });
+  }
+
+
+ async function verifyPayment(verifyData) {
+    console.log("paypal");
+    console.log(totalpayment);
+    await axios({
+      method: "post",
+      url: "/paypalpayment",
+      data: {
+        verifyData,
+        orderdata,
+        coupencode,
+        totalpayment,
+      },
+    }).then((response)=>{
+      if (response.status) {
+          Swal.fire({
+            title: "Order Placed Successfully",
+            icon: "success",
+            showDenyButton: false,
+            confirmButtonText: " Order Successfully",
+            toast: true,
+          }).then((result) => {
+            console.log(result);
+            if (result.isConfirmed) {
+              location.href = "/order";
+            }
+          });
+        }
+    })   
+  }
+</script>
+
+<style>
+  .card-stepper {
+    z-index: 0;
+  }
+
+  #progressbar-2 {
+    color: #455a64;
+  }
+
+  #progressbar-2 li {
+    list-style-type: none;
+    font-size: 13px;
+    width: 33.33%;
+    float: left;
+    position: relative;
+  }
+
+  #progressbar-2 #step1:before {
+    content: "\f058";
+    font-family: "Font Awesome 5 Free";
+    color: #fff;
+    width: 37px;
+    margin-left: 0px;
+    padding-left: 0px;
+  }
+
+  #progressbar-2 #step2:before {
+    content: "\f058";
+    font-family: "Font Awesome 5 Free";
+    color: #fff;
+    width: 37px;
+  }
+
+  #progressbar-2 #step3:before {
+    content: "\f058";
+    font-family: "Font Awesome 5 Free";
+    color: #fff;
+    width: 37px;
+    margin-right: 0;
+    text-align: center;
+  }
+
+  #progressbar-2 #step4:before {
+    content: "\f111";
+    font-family: "Font Awesome 5 Free";
+    color: #fff;
+    width: 37px;
+    margin-right: 0;
+    text-align: center;
+  }
+
+  #progressbar-2 li:before {
+    line-height: 37px;
+    display: block;
+    font-size: 12px;
+    background: #c5cae9;
+    border-radius: 50%;
+  }
+
+  #progressbar-2 li:after {
+    content: "";
+    width: 100%;
+    height: 10px;
+    background: #c5cae9;
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 15px;
+    z-index: -1;
+  }
+
+  #progressbar-2 li:nth-child(1):after {
+    left: 1%;
+    width: 100%;
+  }
+
+  #progressbar-2 li:nth-child(2):after {
+    left: 1%;
+    width: 100%;
+  }
+
+  #progressbar-2 li:nth-child(3):after {
+    left: 1%;
+    width: 100%;
+    background: #c5cae9 !important;
+  }
+
+  #progressbar-2 li:nth-child(4) {
+    left: 0;
+    width: 37px;
+  }
+
+  #progressbar-2 li:nth-child(4):after {
+    left: 0;
+    width: 0;
+  }
+
+  #progressbar-2 li.active:before,
+  #progressbar-2 li.active:after {
+    background: #6520ff;
+  }
+</style>
+<script
+  type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.0.1/mdb.min.js"
+></script>
+
+<%- include('partials/userfooter.ejs') %>

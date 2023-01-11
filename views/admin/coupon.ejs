@@ -1,0 +1,131 @@
+<%- include('partials/adminheader.ejs') %>
+
+<div>
+  <h1 class="pt-5 pb-5" style="margin-left: 550px; font-size: 40px">Coupon</h1>
+</div>
+
+<main class="h-full pb-16 overflow-y-auto">
+  <div class="container grid px-6 mx-auto">
+    <a
+      class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple d-flex justify-content-center"
+      href="/admin/addcoupon"
+    >
+      <div class="flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+          ></path>
+        </svg>
+        <span>Add Coupon</span>
+      </div>
+      <!-- <span>View more &RightArrow;</span> -->
+    </a>
+
+    <!-- With actions -->
+    <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+      Coupons
+    </h4>
+    <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs">
+      <div class="w-full overflow-x-auto">
+        <table class="w-full whitespace-no-wrap">
+          <thead>
+            <tr
+              class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+            >
+              <th class="px-4 py-3">No</th>
+              <th class="px-4 py-3">Coupon Code</th>
+              <th class="px-4 py-3">Status</th>
+              <th class="px-4 py-3">Available</th>
+              <th class="px-4 py-3">Expiry</th>
+              <th class="px-4 py-3">Action</th>
+            </tr>
+          </thead>
+          <% for( let i = 0; i < coupon.length; i++ ) { %>
+
+          <tbody
+            class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
+            id="removing<%= coupon[i]._id %> "
+          >
+            <tr
+              class="text-gray-700 dark:text-gray-400"
+              
+            >
+            
+              <td>
+                <p class="font-semibold px-4 py-3"><%= i+1 %></p>
+              </td>
+              <td class="px-4 py-3">
+                <div class="flex items-center text-sm">
+                  <!-- Avatar with inset shadow -->
+
+                  <div>
+                    <p class="font-semibold"><%= coupon[i].code %></p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-xs">
+                <span
+                  class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                >
+                  <%= coupon[i].status %>
+                </span>
+              </td>
+              <td class="px-4 py-3 text-sm"><%= coupon[i].available %></td>
+              <td class="px-4 py-3 text-xs">
+                <p class="font-semibold">
+                  <%= coupon[i].expiryDate.toLocaleString() %>
+                </p>
+              </td>
+              <td class="font-semibold">
+                <button
+                  class="btn btn-outline-danger font-semibold"
+                  onclick="del('<%= coupon[i]._id %>')"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+          <% } %>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<script
+  src="https://code.jquery.com/jquery-3.6.3.js"
+  integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+  crossorigin="anonymous"
+></script>
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script>
+  function del(id) {
+    console.log("cancel order");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+          console.log("deleting");
+          Swal.fire("Deleted!", "Your coupon has been deleted.", "success");
+
+          let response = axios({
+          method: "delete",
+          url: "/admin/coupondelete",
+          data: {
+            id,
+          },
+        });
+        $('removing'+id).remove()
+        location.reload()
+      }
+    });
+  }
+</script>

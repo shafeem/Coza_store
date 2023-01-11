@@ -1,0 +1,402 @@
+<%- include('partials/adminheader.ejs') %>
+
+<main class="h-full pb-16 overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <!-- General elements -->
+    <h4
+      class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300 pt-4"
+    >
+      Add Products
+    </h4>
+
+    <form
+      action="/admin/postaddproduct"
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <div
+        class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
+      >
+        <!-- --------------------------product neme -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Product Name</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="product_name"
+          />
+        </label>
+        <!-- ----------namesett -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Category Name</span>
+          <!-- <input
+                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                            placeholder="" name="category" /> -->
+          <select
+            class="form-control text-gray-700 dark:text-gray-400"
+            name="category"
+          >
+            <% for( let i=0; i < cat.length; i++ ) { %>
+            <option><%- cat[i].category %></option>
+            <% } %>
+          </select>
+        </label>
+        <!-- ---------------brand -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Brand Name</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="brand"
+          />
+        </label>
+        <!-- -------------------------price -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Price</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="price"
+          />
+        </label>
+        <!-- ----------------------stock -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Stock count</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="stock"
+          />
+        </label>
+        <!-- ------------------------pic 1 -->
+        <span class="text-gray-700 dark:text-gray-400 text-sm pt-3">
+          Pictures 1</span
+        >
+
+        <div class="form-group" style="margin-top: 2rem">
+          <input
+            class="form-control form-control-sm"
+            id="id_image"
+            type="file"
+            name="ImageURL"
+            multiple
+          />
+        </div>
+        <div id="image-box" class="image-container h-50 w-50"></div>
+        <button
+          class="btn btn-outline-info"
+          id="crop-btn"
+          style="
+            width: 100%;
+            margin-top: 10px;
+            display: none;
+            background-color: #0090e7;
+            color: white;
+          "
+          type="button"
+        >
+          Crop
+        </button>
+
+        <!-- -------------pic 2 -->
+        <span class="text-gray-700 dark:text-gray-400 text-sm pt-3">
+          Pictures 2</span
+        >
+        <div class="form-group" style="margin-top: 2rem">
+          <input
+            class="form-control form-control-sm"
+            id="id_image1"
+            type="file"
+            name="ImageURL"
+            style="height: 3rem"
+            multiple
+          />
+        </div>
+
+        <div id="image-box1" class="image-container h-50 w-50"></div>
+        <button
+          class="btn btn-outline-info"
+          id="crop-btn1"
+          style="
+            width: 100%;
+            margin-top: 10px;
+            display: none;
+            background-color: #0090e7;
+            color: white;
+          "
+          type="button"
+        >
+          Crop
+        </button>
+
+        <!-- ------------------pic 3 -->
+        <span class="text-gray-700 dark:text-gray-400 text-sm pt-3">
+          Pictures 3</span
+        >
+        <div class="form-group" style="margin-top: 2rem">
+          <input
+            class="form-control form-control-sm"
+            id="id_image2"
+            type="file"
+            name="ImageURL"
+            style="height: 3rem"
+            multiple
+          />
+        </div>
+
+        <div id="image-box2" class="image-container h-50 w-50"></div>
+        <button
+          class="btn btn-outline-info"
+          id="crop-btn2"
+          style="
+            width: 100%;
+            margin-top: 10px;
+            display: none;
+            background-color: #0090e7;
+            color: white;
+          "
+          type="button"
+        >
+          Crop
+        </button>
+
+        <!-- -------------message -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Discription</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Enter some content."
+            name="discription"
+          />
+        </label>
+
+        <button
+          type="submit"
+          id="confirm-btn"
+          class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+        >
+          Submit
+        </button>
+        <button class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</main>
+<!-- image cropping 1 -->
+
+<script>
+  // image-box is the id of the div element that will store our cropping image preview
+  const imagebox = document.getElementById("image-box");
+  // crop-btn is the id of button that will trigger the event of change original file with cropped file.
+  const crop_btn = document.getElementById("crop-btn");
+  // id_image is the id of the input tag where we will upload the image
+  const input = document.getElementById("id_image");
+
+  // When user uploads the image this event will get triggered
+  input.addEventListener("change", () => {
+    // Getting image file object from the input variable
+    const img_data = input.files[0];
+    // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
+    // The new object URL represents the specified File object or Blob object.
+    const url = URL.createObjectURL(img_data);
+
+    // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
+    imagebox.innerHTML = `<img src="${url}" id="image" style="width:70%;">`;
+
+    // Storing that cropping view image in a variable
+    const image = document.getElementById("image");
+
+    // Displaying the image box
+    document.getElementById("image-box").style.display = "block";
+    // Displaying the Crop buttton
+    document.getElementById("crop-btn").style.display = "block";
+    // Hiding the Post button
+    document.getElementById("confirm-btn").style.display = "none";
+
+    // Creating a croper object with the cropping view image
+    // The new Cropper() method will do all the magic and diplay the cropping view and adding cropping functionality on the website
+    // For more settings, check out their official documentation at https://github.com/fengyuanchen/cropperjs
+    const cropper = new Cropper(image, {
+      autoCropArea: 1,
+      viewMode: 1,
+      scalable: false,
+      zoomable: false,
+      movable: false,
+      minCropBoxWidth: 200,
+      minCropBoxHeight: 200,
+    });
+
+    // When crop button is clicked this event will get triggered
+    crop_btn.addEventListener("click", () => {
+      // This method coverts the selected cropped image on the cropper canvas into a blob object
+      cropper.getCroppedCanvas().toBlob((blob) => {
+        // Gets the original image data
+        let fileInputElement = document.getElementById("id_image");
+        // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+        let file = new File([blob], img_data.name, {
+          type: "image/",
+          lastModified: new Date().getTime(),
+        });
+        // Create a new container
+        let container = new DataTransfer();
+        // Add the cropped image file to the container
+        container.items.add(file);
+        // Replace the original image file with the new cropped image file
+        fileInputElement.files = container.files;
+
+        // Hide the cropper box
+        document.getElementById("image-box").style.display = "none";
+        // Hide the crop button
+        document.getElementById("crop-btn").style.display = "none";
+        // Display the Post button
+        document.getElementById("confirm-btn").style.display = "block";
+      });
+    });
+  });
+</script>
+
+<!-- imagr script 2 -->
+
+<script>
+  // image-box is the id of the div element that will store our cropping image preview
+  const imagebox1 = document.getElementById("image-box1");
+  // crop-btn is the id of button that will trigger the event of change original file with cropped file.
+  const crop_btn1 = document.getElementById("crop-btn1");
+  // id_image is the id of the input tag where we will upload the image
+  const input1 = document.getElementById("id_image1");
+
+  // When user uploads the image this event will get triggered
+  input1.addEventListener("change", () => {
+    // Getting image file object from the input variable
+    const img_data = input1.files[0];
+    // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
+    // The new object URL represents the specified File object or Blob object.
+    const url = URL.createObjectURL(img_data);
+
+    // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
+    imagebox1.innerHTML = `<img src="${url}" id="image" style="width:70%;">`;
+
+    // Storing that cropping view image in a variable
+    const image = document.getElementById("image");
+
+    // Displaying the image box
+    document.getElementById("image-box1").style.display = "block";
+    // Displaying the Crop buttton
+    document.getElementById("crop-btn1").style.display = "block";
+    // Hiding the Post button
+    document.getElementById("confirm-btn").style.display = "none";
+
+    // Creating a croper object with the cropping view image
+    // The new Cropper() method will do all the magic and diplay the cropping view and adding cropping functionality on the website
+    // For more settings, check out their official documentation at https://github.com/fengyuanchen/cropperjs
+    const cropper = new Cropper(image, {
+      autoCropArea: 1,
+      viewMode: 1,
+      scalable: false,
+      zoomable: false,
+      movable: false,
+      minCropBoxWidth: 200,
+      minCropBoxHeight: 200,
+    });
+
+    // When crop button is clicked this event will get triggered
+    crop_btn1.addEventListener("click", () => {
+      // This method coverts the selected cropped image on the cropper canvas into a blob object
+      cropper.getCroppedCanvas().toBlob((blob) => {
+        // Gets the original image data
+        let fileInputElement = document.getElementById("id_image1");
+        // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+        let file = new File([blob], img_data.name, {
+          type: "image/",
+          lastModified: new Date().getTime(),
+        });
+        // Create a new container
+        let container = new DataTransfer();
+        // Add the cropped image file to the container
+        container.items.add(file);
+        // Replace the original image file with the new cropped image file
+        fileInputElement.files = container.files;
+
+        // Hide the cropper box
+        document.getElementById("image-box1").style.display = "none";
+        // Hide the crop button
+        document.getElementById("crop-btn1").style.display = "none";
+        // Display the Post button
+        document.getElementById("confirm-btn").style.display = "block";
+      });
+    });
+  });
+</script>
+
+<!-- imagr script 3 -->
+
+<script>
+  // image-box is the id of the div element that will store our cropping image preview
+  const imagebox2 = document.getElementById("image-box2");
+  // crop-btn is the id of button that will trigger the event of change original file with cropped file.
+  const crop_btn2 = document.getElementById("crop-btn2");
+  // id_image is the id of the input tag where we will upload the image
+  const input2 = document.getElementById("id_image2");
+
+  // When user uploads the image this event will get triggered
+  input2.addEventListener("change", () => {
+    // Getting image file object from the input variable
+    const img_data2 = input2.files[0];
+    // createObjectURL() static method creates a DOMString containing a URL representing the object given in the parameter.
+    // The new object URL represents the specified File object or Blob object.
+    const url = URL.createObjectURL(img_data2);
+
+    // Creating a image tag inside imagebox which will hold the cropping view image(uploaded file) to it using the url created before.
+    imagebox2.innerHTML = `<img src="${url}" id="image" style="width:70%;">`;
+
+    // Storing that cropping view image in a variable
+    const image = document.getElementById("image");
+
+    // Displaying the image box
+    document.getElementById("image-box2").style.display = "block";
+    // Displaying the Crop buttton
+    document.getElementById("crop-btn2").style.display = "block";
+    // Hiding the Post button
+    document.getElementById("confirm-btn").style.display = "none";
+
+    // Creating a croper object with the cropping view image
+    // The new Cropper() method will do all the magic and diplay the cropping view and adding cropping functionality on the website
+    // For more settings, check out their official documentation at https://github.com/fengyuanchen/cropperjs
+    const cropper = new Cropper(image, {
+      autoCropArea: 1,
+      viewMode: 1,
+      scalable: false,
+      zoomable: false,
+      movable: false,
+      minCropBoxWidth: 200,
+      minCropBoxHeight: 200,
+    });
+
+    // When crop button is clicked this event will get triggered
+    crop_btn2.addEventListener("click", () => {
+      // This method coverts the selected cropped image on the cropper canvas into a blob object
+      cropper.getCroppedCanvas().toBlob((blob) => {
+        // Gets the original image data
+        let fileInputElement = document.getElementById("id_image2");
+        // Make a new cropped image file using that blob object, image_data.name will make the new file name same as original image
+        let file = new File([blob], img_data2.name, {
+          type: "image/",
+          lastModified: new Date().getTime(),
+        });
+        // Create a new container
+        let container = new DataTransfer();
+        // Add the cropped image file to the container
+        container.items.add(file);
+        // Replace the original image file with the new cropped image file
+        fileInputElement.files = container.files;
+
+        // Hide the cropper box
+        document.getElementById("image-box2").style.display = "none";
+        // Hide the crop button
+        document.getElementById("crop-btn2").style.display = "none";
+        // Display the Post button
+        document.getElementById("confirm-btn").style.display = "block";
+      });
+    });
+  });
+</script>

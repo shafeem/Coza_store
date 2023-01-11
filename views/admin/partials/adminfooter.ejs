@@ -1,0 +1,173 @@
+<%- include('partials/userheader.ejs') %>
+
+<div class="container p-t-55">
+  <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+    <a href="/" class="stext-109 cl8 hov-cl1 trans-04">
+      Home
+      <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+    </a>
+
+    <span class="stext-109 cl4"> Shoping Cart </span>
+  </div>
+</div>
+<!-- Home -->
+
+<section
+  class="bg-img1 txt-center p-lr-15 p-tb-92"
+  style="background-image: url('/user/images/bg-01.jpg')"
+>
+  <h2 class="ltext-105 cl0 txt-center">Checkout</h2>
+</section>
+
+<div class="pt-5 d-flex justify-content-center">
+  <div class="row">
+    <div class="col-lg-4">
+      <h4 class="pt-4">BILLING DETAILS</h4>
+
+      <button
+        class="btn btn-success mt-4"
+        type="button"
+        data-toggle="collapse"
+        data-target="#collapseExample"
+        aria-expanded="false"
+        aria-controls="collapseExample"
+      >
+        Select Address
+      </button>
+      <a href="/address" class="btn btn-success mt-4">Add Address</a>
+
+      <% for( let i =0;i<add.length;i++ ) { %>
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body" style="width: 400px">
+            <label class="form-check">
+                <% if (i==0) { %>
+                    <label> <input type="radio" aria-label="Radio button for following text input" name="address" id="<%= add[i]._id %> " value="<%= i %>" checked>Address </label>
+                 <% } else { %>
+                    <label> <input type="radio" aria-label="Radio button for following text input"  name="address" id="<%= add[i]._id %> " value="<%=i %>">Address </label>
+                <% } %>
+
+              <label class="form-check-label" for="defaultCheck1">
+                <li>
+                  <p href=""><%= add[i].fullname %></p>
+                  <p href=""><%= add[i].phone %></p>
+                  <p href=""><%= add[i].address %></p>
+                  <p href=""><%= add[i].street %></p>
+                  <p href=""><%= add[i].city %></p>
+                  <p href=""><%= add[i].state %></p>
+                  <p href=""><%= add[i].pincode %></p>
+                </li>
+              </label>
+            </div>
+          </div>
+        </div>
+        <% } %>
+
+      <label class="block text-sm pt-4">
+        <input
+          class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+          placeholder="Coupon Number !"
+        />
+      </label>
+    </div>
+    <div class="col-lg-4" style="text-align: -webkit-center">
+      <h4 class="pt-4 align-items-center">Your Cart Items</h4>
+
+      <table class="w-full whitespace-no-wrap">
+        <thead>
+          <tr
+            class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+          >
+            <th class="px-4 py-3">Product</th>
+            <th class="px-4 py-3">Amount</th>
+            <th class="px-4 py-3">Count</th>
+            <th class="px-4 py-3">Total</th>
+          </tr>
+        </thead>
+        <% for( let i = 0; i < pic.length; i++ ) { %>
+        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+          <tr class="text-gray-700 dark:text-gray-400">
+            <td class="px-4 py-3">
+              <div class="flex items-center text-sm">
+                <!-- Avatar with inset shadow -->
+                <div class="relative hidden w-8 h-8 mr-3 rounded-full md:block">
+                  <img
+                    height="100"
+                    width="80"
+                    class="bi bi-images"
+                    src="/image/<%= pic[i].product.images[0].filename %>"
+                    alt=""
+                    loading="lazy"
+                  />
+                  <div
+                    class="absolute inset-0 rounded-full shadow-inner"
+                    aria-hidden="true"
+                  ></div>
+                </div>
+                <div>
+                  <p class="font-semibold">
+                    <%= pic[i].product.product_name %>
+                  </p>
+                </div>
+              </div>
+            </td>
+            <td class="px-4 py-3 text-sm">$ <%= pic[i].price %></td>
+            <td class="px-4 py-3 text-xs">
+              <span
+                class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+              >
+                *<%= pic[i].quantity %>
+              </span>
+            </td>
+            <td class="px-4 py-3 text-sm">$<%= pic[i].total %></td>
+          </tr>
+        </tbody>
+        <% } %>
+      </table>
+      
+      <h4 class="pt-4">Total Price :$<%= cartdt.carttotal %></h4>
+    </div>
+    <div class="col-lg-4" style="text-align: -webkit-center">
+        <h4 class="pt-4 align-items-center">Select Your Payment Mothord</h4>
+
+        <div>
+            <label class="btn btn-warning  btn-lg btn-block mt-4">
+                <input type="radio" aria-label="Radio button for following text input" name="cod" id="cod" value="cod" onclick="placeorder()">
+                cod
+            </label>
+
+           
+            <!-- <a  class="btn btn-warning  btn-lg btn-block mt-4" id="cashOndelivery" name="payment" value="COD" onclick="placeorder()" >Cash On Delivery</a>
+            <a href="/razorpay" class="btn btn-warning  btn-lg btn-block mt-4">Rayzor Pay</a> -->
+        </div>
+    </div>
+  </div>
+</div>
+
+<script
+  src="https://code.jquery.com/jquery-3.6.3.js"
+  integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+  crossorigin="anonymous"></script>
+
+<script>
+    async function placeorder () {
+console.log("hiihihihihihih")
+        const address = $('input[type="radio"][name="address"]:checked').val();
+        const cod= $('input[type="radio"][name="cod"]:checked').val();
+        
+        console.log(",.,.,,",address)
+        console.log('llllllllllllllllllllllllllll',cod);
+
+        const response = await axios({
+            method: 'post',
+            url   :  "/payment",
+            data   : {
+                address,cod
+            }
+        })
+    
+    
+}
+</script>
+
+
+<%- include('partials/userfooter.ejs') %>

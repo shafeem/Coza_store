@@ -1,0 +1,51 @@
+<%- include('partials/adminheader.ejs') %>
+
+
+
+    <!-- General elements -->
+    <h4 class="pl-4 pt-4 mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+        Create Categary
+    </h4>
+    
+    <% if (message) { %>
+     <h4 class="text-center pt-3 text-danger"><%= message %> </h4>
+    <% } %>
+
+
+
+
+    <form action="/admin/addcategory " method="post" enctype="multipart/form-data" class="pt-3">
+        <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 pt">
+            <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Categary Name</span>
+                <input
+                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                    placeholder="***" name="category" id="cat" required>
+
+                    
+            </label>
+
+            <span class="text-gray-700 dark:text-gray-400 text-sm pt-3">Select Pictures</span>
+            <div class="custom-file mt-3">
+                <input type="file" name="imageurl" id="fileToUpload" required>
+                
+            </div>
+
+            <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400 ">Message</span>
+                <input
+                    class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+                    placeholder="***" name="message" />
+            </label>
+
+            <button type="submit"
+                class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
+            <button class="btn btn-secondary">Cancel</button>
+        </div>
+    </form>
+
+
+    </main>
+    </body>
+
+    </html>

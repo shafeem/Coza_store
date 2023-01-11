@@ -1,0 +1,181 @@
+<%- include('partials/adminheader.ejs') %>
+
+<main class="h-full pb-16 overflow-y-auto">
+    <div
+        class="container grid px-6 mx-auto pt-4">
+        <!-- With actions -->
+        <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300">
+            Orders
+        </h4>
+
+        <div class="w-full overflow-hidden rounded-lg shadow-xs">
+            <div class="w-full overflow-x-auto">
+                <table class="w-full whitespace-no-wrap">
+                    <thead>
+                        <tr class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800">
+                            <th class="px-4 py-3">Users</th>
+                            <th class="px-4 py-3">Amount</th>
+                            <th class="px-4 py-3">Date</th>
+                            <th class="px-4 py-3">Payment Method</th>
+                            <th class="px-4 py-3">Payment Status</th>
+                            <th class="px-4 py-3">Track</th>
+                            <th class="px-4 py-3">Status</th>
+                            <th class="px-4 py-3">View</th>
+                        </tr>
+                    </thead>
+
+                    <% for( let i = 0; i < orderdetails.length; i++ ) { %>
+
+                        <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
+                            <tr class="text-gray-700 dark:text-gray-400">
+                                <td class="px-4 py-3">
+                                    <div
+                                        class="flex items-center text-sm">
+                                        <!-- Avatar with inset shadow -->
+
+                                        <div>
+                                            <p class="font-semibold">
+                                                <%= orderdetails[i].address.fullname %>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="">
+                                        <p class="font-semibold"><%= orderdetails[i].totalprice %></p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <p class="font-semibold"><%=orderdetails[i].date%></p>
+                                </td>
+                                <td>
+                                    <p class="font-semibold"><%=orderdetails[i].paymentmethod%></p>
+                                </td>
+                                <td>
+                                    <p class="font-semibold"><%=orderdetails[i].paymentstatus%></p>
+                                </td>
+                                <td>
+                                    <p class="font-semibold"><%=orderdetails[i].orderstatus%></p>
+                                </td>
+
+                                <% if (orderdetails[i].orderstatus !='Cancelled' && orderdetails[i].orderstatus !='Delivered'  && orderdetails[i].orderstatus !='Returned'   && orderdetails[i].orderstatus !='Returned Success' 
+                                 ) { %>
+
+                                    <td>
+
+                                        <select id="track<%= i %>" name="track">
+
+
+                                            <option value="<%= orderdetails[i].orderstatus %>" selected>
+                                                <%= orderdetails[i].orderstatus %>
+                                            </option>
+
+                                            <option value="Cancelled">Cancelled</option>
+                                            <option value="Order Confirmed">Order Confirmed</option>
+                                            <option value="Shipped">Shipped</option>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Returned">Returned</option>
+                                            <option value="Returned">Returned Success</option>
+                                            <option value="Out For Delivery">Out For Delivery</option>
+                                        </select>
+
+                                        <button type="button" class="btn btn-outline-danger" onclick="orderstatus('<%= orderdetails[i]._id%>','<%= i%>')">
+                                            Update
+                                        </button>
+
+                                    </td>
+
+                                <% } else if (orderdetails[i].orderstatus =='Returned') { %>
+                                    <td class="d-flex">
+                                        <p style="padding-top: 16px;" class="font-semibold"><%=orderdetails[i].orderstatus%></p>
+
+                                        <button type="button" class="btn btn-outline-danger" style="margin-left: 71px;margin-top: 10px;" onclick="orderApproval('<%= orderdetails[i]._id%>','<%=orderdetails[i].totalprice%>','<%=orderdetails[i].user%>')">
+                                            Approve
+                                        </button>
+                                    </td>
+
+
+                                <% } else { %>
+
+                                    <td>
+                                        <p class="font-semibold"><%=orderdetails[i].orderstatus%></p>
+                                    </td>
+
+                                <% } %>
+                                <td>
+                                    <a href="/admin/orderview/<%= orderdetails[i]._id %> " class="btn btn-outline-success" style="margin-left: 20px">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-view-list" viewbox="0 0 16 16">
+                                            <path d="M3 4.5h10a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2zm0 1a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1H3zM1 2a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 2zm0 12a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13A.5.5 0 0 1 1 14z"/>
+                                        </svg>
+                                    </a>
+                                </td>
+                            </tbody>
+                        </tr>
+                    </tbody>
+
+                <% } %>
+            </table>
+        </div>
+    </div>
+</div></main><script src="https://code.jquery.com/jquery-3.6.3.js" integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM=" crossorigin="anonymous"></script><script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script><script>
+function orderstatus(id, i) {
+
+    const value = $(`#track${i}`).find(":selected").val();
+    console.log(id, value);
+
+    $.ajax({
+        url: "/admin/orderstatus",
+        data: {
+            id,
+            value
+        },
+        method: "post",
+        success: (response) => {
+            console.log(response);
+            if (response.status) {
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'center',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                })
+
+                Toast.fire({icon: 'success', title: 'Order Updated Successfully'}).then(() => {
+                    window.location.reload();
+                });
+            }
+        }
+    })
+}
+function orderApproval(id,price,user) {
+
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, Approve it!'
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            let approval = await axios({
+                method: 'post',
+                 url: '/admin/orderapproval',
+                  data: {
+                    id,price,user
+                }}).then((response)=>{
+                Swal.fire('Approved!', 'This Order has Approved', 'success')
+
+                })
+                location.href='/admin/order'
+            
+
+        }
+    })
+}</script>

@@ -1,0 +1,136 @@
+<%- include('partials/adminheader.ejs') %>
+
+<!-- <form action="/admin/postcoupon " method="post" class="pt-3">
+  <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800 pt">
+      <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Categary Name</span>
+          <input
+              class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+              placeholder="***" name="category" id="cat" required>
+
+              
+      </label>
+
+      
+
+      <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400 ">Message</span>
+          <input
+              class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+              placeholder="***" name="message" />
+      </label>
+
+      <button type="submit"
+          class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
+      <button class="btn btn-secondary">Cancel</button>
+  </div>
+</form> -->
+
+<main class="h-full pb-16 overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <!-- General elements -->
+    <h4
+      class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300 pt-4"
+    >
+      Add Coupon
+    </h4>
+
+    <form action="/admin/postcoupon" method="post">
+      <div
+        class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
+      >
+        <!-- --------------------------Coupon Code -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Coupon Code</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Coupon Code"
+            name="code"
+            required
+          />
+        </label>
+
+        <!-- ----------------------Availablity -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Availablity</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Availablity"
+            name="available"
+            required
+          />
+        </label>
+        <!-- -----------------------------Status -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Status</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Status"
+            name="status"
+            required
+          />
+        </label>
+
+        <!-- -----------------------------Amount -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Amount</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Amount"
+            name="amount"
+          />
+        </label>
+        <!-- -----------------------------Percentage -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Percentage</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Percentage"
+            name="percentage"
+          />
+        </label>
+        <!-- -----------------------------Maximum Redeem -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Maximum Redeem</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Maximum Redeem"
+            name="maximumRedeemAmount"
+            required
+          />
+        </label>
+        <!-- -----------------------------Maximum Redeem -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Minimum Cart</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Maximum Cart"
+            name="minimumCartAmount"
+            required
+          />
+        </label>
+        <!-- ....................................expiry date -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Expiry Date</span>
+          <input
+            type="date"
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Expiry Date"
+            name="expiryDate"
+            required
+          />
+        </label>
+
+        <div class="pt-4">
+          <button
+            type="submit"
+            class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+          >
+            Submit
+          </button>
+          <button class="btn btn-secondary">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
