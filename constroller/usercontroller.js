@@ -7,6 +7,7 @@ const bannerscema = require("../schema/bannermodel");
 const addressscema = require("../schema/addressmodel");
 const orderscema = require("../schema/ordermodel");
 const couponscema = require("../schema/coupenmodel");
+const reviewscema = require("../schema/reviewmodel");
 const bcrypt = require("bcrypt");
 const app = require("../routes");
 const moment = require("moment");
@@ -14,6 +15,8 @@ const paypal = require("@paypal/checkout-server-sdk");
 const { response } = require("../routes");
 const { default: mongoose } = require("mongoose");
 require("dotenv").config();
+
+const { sendsms, verifysms } = require("../verification/otp");
 
 const twilio_sid = process.env.SID;
 const twilio_token = process.env.TOKEN;
@@ -28,8 +31,6 @@ const envirolment =
 const paypalCliend = new paypal.core.PayPalHttpClient(
   new envirolment(process.env.PAYPAL_CLIND_ID, process.env.PAYPAL_CLIND_SECRET)
 );
-let idPaypal =
-  "AdcD74uV6ToQIa5z1OL8mU3X7HuZfFbKFshZsf07zLBCL1WmTeN_sBqJo0XGQwVrOHzqK6mMZtfcNN-W";
 
 sess = null;
 let mobil;
@@ -56,7 +57,14 @@ const usignup = (req, res) => {
     res.redirect("/error");
   }
 };
-
+const blockchecker = (req, res, next) => {
+  user = req.session.userdata;
+  if (user.access) {
+    next();
+  } else {
+    res.redirect("/login");
+  }
+};
 const uhome = async (req, res) => {
   try {
     const session = req.session.loginchecker;
@@ -66,6 +74,7 @@ const uhome = async (req, res) => {
     let productdetailes = await productscema.find({});
     let count = req.session.cartcount;
     let banner = await bannerscema.find({});
+    let productdts = await productscema.find({});
 
     console.log(req.session.cartdt);
     console.log("this is cart dt check this");
@@ -82,29 +91,36 @@ const uhome = async (req, res) => {
       count,
       cartdt,
       banner,
+      productdts,
     });
   } catch (error) {
     console.log(error);
     res.redirect("/error");
   }
 };
+
 const uproduct = async (req, res) => {
   try {
     let productdts;
-    if (req.query.sort=='women') {
-       productdts = await productscema.find({category:{$eq:"WOMENS"}})
-      console.log('asdfghjklsdfghjklsdfghjkl');
+    let item = req.query.sort;
+    let allproduct = res.pagenation.results;
+    console.log(req.query, ",,,,,,,,,,,,,,,,,,,,,,,,,,,,,,");
+    let pagenation = res.pagenation;
+    if (item) {
+      productdts = await productscema.find({ category: { $eq: item } });
+      console.log("asdfghjklsdfghjklsdfghjkl");
+    } else {
+      productdts = allproduct;
+      console.log("this is productdtskkkkkkkkkkkkk");
     }
-    else{
-      productdts = await productscema.find()
-      console.log('this is productdtskkkkkkkkkkkkk');
-    }
-    console.log(req.query,productdts,req.query.sort,'llllllllllllll;;;;;;;;');
-    
+
     res.render("user/product", {
       udata: req.session.userdata,
       session: req.session.loginchecker,
       productdts,
+      pagenation,
+      allproduct,
+      item,
     });
     console.log("in product page");
   } catch (error) {
@@ -112,9 +128,9 @@ const uproduct = async (req, res) => {
     console.log(error);
   }
 };
-const productsort=(req,res)=>{
-  console.log(req.query,'//////////////////');
-}
+const productsort = (req, res) => {
+  console.log(req.query, "//////////////////");
+};
 const uabout = (req, res) => {
   res.render("user/about", { session: req.session.loginchecker });
 };
@@ -132,55 +148,55 @@ const usersignup = async (req, res) => {
     } else {
       req.session.useralldata = req.body;
       console.log("sesssion data og user", req.session.useralldata);
-      client.verify.v2
-        .services(twilio_serviceId)
-        .verifications.create({ to: `+91${mobil}`, channel: "sms" })
-        .then((verification) => {
-          console.log(verification.status);
-          res.render("user/otp");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+
+      if(req.body.name && req.body.email && req.body.phone && req.body.password && req.body.confirmpassword){
+
+        const phone = req.body.phone;
+        sendsms(phone);
+        res.redirect("/otp");
+      }
     }
   } catch (error) {
     console.log(error);
     res.redirect("/error");
   }
 };
-
+const resent=(req,res)=>{
+  try {
+  res.render("user/otp")
+    
+  } catch (error) {
+    console.log(error);
+    res.redirect("/error"); 
+  }
+}
 const otpverifyer = async (req, res) => {
   try {
     console.log(req.body.otp, mobil);
     console.log(req.body);
-    //    otp.verifyOtp(req.session.mobilenum,req.body.otp)
-    client.verify.v2
-      .services(twilio_serviceId)
-      .verificationChecks.create({ to: `+91${mobil}`, code: req.body.otp })
-      .then(async (verification_check) => {
-        console.log(verification_check.status);
-        console.log("heeeelllo");
+    console.log("heeeelllo");
+    const phone = req.session.useralldata.phone;
+    const otp = req.body.otp;
+    await verifysms(phone, otp).then(async (verification_check) => {
+      if (verification_check.status == "approved") {
+        let password = req.session.useralldata.password;
+        console.log(req.session.useralldata);
+        // const salt = await bcrypt.genSalt(10)
+        password = await bcrypt.hash(password, 10);
+        req.session.loginchecker = true;
 
-        if (verification_check.status == "approved") {
-          console.log("sdhshndnfvknjnjnjnjnjnjnjnjnjnjnj");
-          let password = req.session.useralldata.password;
-          console.log(req.session.useralldata);
-          // const salt = await bcrypt.genSalt(10)
-          password = await bcrypt.hash(password, 10);
-          req.session.loginchecker = true;
-
-          const user = userscema.create({
-            name: req.session.useralldata.name,
-            email: req.session.useralldata.email,
-            mobile: req.session.useralldata.phone,
-            password: password,
-          });
-          res.redirect("/");
-        } else {
-          console.log("asdfsafss");
-          res.redirect("/otp");
-        }
-      });
+        const user = userscema.create({
+          name: req.session.useralldata.name,
+          email: req.session.useralldata.email,
+          mobile: req.session.useralldata.phone,
+          password: password,
+        });
+        res.redirect("/");
+      } else {
+        console.log("asdfsafss");
+        res.redirect("/otp");
+      }
+    });
   } catch (error) {
     console.log(error);
     res.redirect("/error");
@@ -189,6 +205,7 @@ const otpverifyer = async (req, res) => {
 
 const userlogin = async (req, res) => {
   try {
+    console.log(req.body,'llllllllllll')
     let userp = req.body.password;
     let usere = req.body.email;
     const user1 = await userscema.findOne({ email: usere });
@@ -220,6 +237,7 @@ const userlogin = async (req, res) => {
     }
   } catch (error) {
     res.redirect("/error");
+    console.log(error);
   }
 };
 const sessionchecker = (req, res, next) => {
@@ -311,6 +329,10 @@ const productdetails = async (req, res) => {
     let id = req.params.id;
     let details = await productscema.findOne({ _id: id });
     // console.log(details);
+
+    review = await reviewscema.find({ product: req.params.id });
+    console.log(review, "fffffffffffffffffffffffffff");
+
     console.log(details.images.length);
     console.log("this is details");
     productdts = await productscema.find({});
@@ -319,6 +341,7 @@ const productdetails = async (req, res) => {
       details,
       productdts,
       session: req.session.loginchecker,
+      review,
     });
   } catch (error) {
     console.log(error);
@@ -407,7 +430,7 @@ const cartview = async (req, res) => {
             "////////////////////////////////////////"
           );
           console.log(productsdetail[0].stock, ";;;;;;;;;;;;;");
-          if (productsdetail[0].stock >= quantity) {
+          if (productsdetail[0].stock > quantity) {
             await cartscema
               .updateOne(
                 {
@@ -715,6 +738,7 @@ const checkout = async (req, res) => {
     cartdt = cartdt[0];
     console.log(cartdt, ' "jjjjjjjjjjjjjjjjjjj');
     let pic = cartdt.item;
+    let idPaypal = process.env.PAYPAL_CLIND_ID;
     console.log(idPaypal, "jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj");
 
     if (address != null) {
@@ -735,6 +759,7 @@ const checkout = async (req, res) => {
         cartdt,
         address,
         pic,
+        idPaypal
       });
     }
   } catch (error) {
@@ -977,6 +1002,7 @@ const order = async (req, res) => {
 };
 const orderview = async (req, res) => {
   try {
+    console.log("in order view page llllllll");
     let udata = req.session.userdata;
     let order = await orderscema
       .findOne({ _id: req.params.id })
@@ -993,6 +1019,41 @@ const orderview = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.redirect("/error");
+  }
+};
+const postorderview = async (req, res) => {
+  try {
+    console.log("this is postorderview page please checkk this");
+    console.log(req.body);
+    console.log(req.params.id, "kkkkkkkkkkk");
+
+    let order = await orderscema
+      .findOne({ _id: req.params.id })
+      .populate("products.product");
+    console.log("thsi is order", order);
+
+    console.log(req.body.product);
+
+    let product = await productscema.findOne({
+      product_name: req.body.product,
+    });
+
+    console.log("this is product", product);
+
+    let reviewdetails = reviewscema({
+      product: product._id,
+      user: req.session.userdata._id,
+      review: req.body.review,
+      name: req.body.name,
+      rating: req.body.rating,
+      email: req.body.email,
+    });
+    await reviewdetails.save();
+
+    res.redirect("/order");
+  } catch (error) {
+    res.redirect("/error");
+    console.log(error);
   }
 };
 const error = (req, res) => {
@@ -1039,23 +1100,22 @@ const couponverify = async (req, res) => {
     // console.log(req.body);
     const { ctotal, coupencode } = req.body;
     console.log(ctotal, coupencode);
+    console.log(coupencode);
 
     const coupon = await couponscema.find({
       code: coupencode,
       status: "active",
     });
-    console.log(coupon);
+    console.log(coupon, "111111111111112222222222222");
 
     if (coupon.length == 0) {
-      res.json({ status: false });
+      msg = "Coupon Invalid";
+      res.json({ status: false, msg });
     } else {
       console.log(coupon[0].useduser, ";;;;;;;;;;;;;;;");
 
-      
-      console.log(coupon[0].useduser[0].owner);
-      if (coupon[0].useduser[0].owner.length==0) {
-
-        
+      console.log(coupon[0].useduser[0].owner, "22222222222");
+      if ((coupon[0].useduser[0].owner.length == 0, "3333333333333")) {
         let todaydate = new Date().toLocaleDateString();
         let maximumRedeemAmount = coupon[0].maximumRedeemAmount;
         console.log(maximumRedeemAmount, "this is maximum redeem amount");
@@ -1094,16 +1154,18 @@ const couponverify = async (req, res) => {
         await couponscema.findOneAndUpdate({
           code: coupencode,
           status: "active",
-          useduser:[{
-            owner:req.session.userdata._id
-          }]
+          useduser: [
+            {
+              owner: req.session.userdata._id,
+            },
+          ],
         });
         // res.json({status:true})
       } else {
         res.json({ used: true });
-
       }
     }
+    console.log("coupon comleated");
   } catch (error) {
     res.redirect("/error");
     console.log(error);
@@ -1232,4 +1294,7 @@ module.exports = {
   paypalorder,
   paypalpayment,
   productsort,
+  postorderview,
+  blockchecker,
+  resent,
 };

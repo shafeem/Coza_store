@@ -1,91 +1,127 @@
 <%- include('partials/adminheader.ejs') %>
 
-    <main class="h-full pb-16 overflow-y-auto">
-        <div class="container px-6 mx-auto grid">
+<main class="h-full pb-16 overflow-y-auto">
+  <div class="container px-6 mx-auto grid">
+    <!-- General elements -->
+    <h4
+      class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300 pt-4"
+    >
+      Edit Products
+    </h4>
 
-            <!-- General elements -->
-            <h4 class="mb-4 text-lg font-semibold text-gray-600 dark:text-gray-300 pt-4">
-                Edit Products
-            </h4>
+    <form
+      action="/admin/posteditproduct/<%- datas._id %> "
+      method="post"
+      enctype="multipart/form-data"
+    >
+      <div
+        class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800"
+      >
+        <!-- --------------------------product neme -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Product Name</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="product_name"
+            value="<%- datas.product_name %> "
+          />
+        </label>
+        <!-- ----------namesett -->
+        <label class="block mt-4 text-sm">
+          <span class="text-gray-700 dark:text-gray-400"> Category Names </span>
 
-            <form action="/admin/posteditproduct/<%- datas._id %> " method="post" enctype="multipart/form-data">
-
-                <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
-                    <!-- --------------------------product neme -->
-                    <label class="block text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">Product Name</span>
-                        <input
-                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                            placeholder="" name="product_name" value="<%- datas.product_name %> " />
-                    </label>
-                    <!-- ----------namesett -->
-                    <label class="block mt-4 text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">
-                            Category Names
-                        </span>
-
-                        <select class="form-control" name="category">
-
-                            <% for( let i=0; i < catdet.length; i++ ) { %>
-                                <option><%- catdet[i].category %></option>
-                                <% } %>
-
-                        </select>
-                    </label>
-                    <!-- ---------------brand -->
-                    <label class="block text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">Brand Name</span>
-                        <input
-                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                            placeholder="" name="brand" value="<%- datas.brand %> " />
-                    </label>
-                    <!-- -------------------------price -->
-                    <label class="block text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">Price</span>
-                        <input
-                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                            placeholder="" name="price" value="<%- datas.price %> " />
-                    </label>
-                    <!-- ----------------------stock -->
-                    <label class="block text-sm">
-                        <span class="text-gray-700 dark:text-gray-400">Stock Name</span>
-                        <input
-                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                            placeholder="" name="stock" value="<%- datas.stock %> " />
-                    </label>
-                    <!-- ------------------------pic 1 -->
-                    <span class="text-gray-700 dark:text-gray-400 text-sm pt-3"> Pictures 1</span>
-                    <div class="custom-file mt-3">
-                        <input type="file" name="images" id="fileToUpload">
-
-                    </div>
-
-                    <!-- -------------pic 2 -->
-                    <span class="text-gray-700 dark:text-gray-400 text-sm pt-3"> Pictures 2</span>
-                    <div class="custom-file mt-3">
-                        <input type="file" name="images" id="fileToUpload">
-
-                    </div>
-
-                    <!-- ------------------pic 3 -->
-                    <span class="text-gray-700 dark:text-gray-400 text-sm pt-3"> Pictures 3</span>
-                    <div class="custom-file mt-3">
-                        <input type="file" name="images" id="fileToUpload">
-
-                    </div>
-
-                    <!-- -------------message -->
-                    <label class="block text-sm">
-                        <span class="text-gray-700 dark:text-gray-400 ">Discription</span>
-                        <input
-                            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                            placeholder="Enter some content." name="discription" value="discription" />
-                    </label>
-
-                    <button type="submit"
-                        class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">Submit</button>
-                    <button class="btn btn-secondary">Cancel</button>
-                </div>
-            </form>
+          <select class="form-control" name="category">
+            <% for( let i=0; i < catdet.length; i++ ) { %>
+            <option><%- catdet[i].category %></option>
+            <% } %>
+          </select>
+        </label>
+        <!-- ---------------brand -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Brand Name</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="brand"
+            value="<%- datas.brand %> "
+          />
+        </label>
+        <!-- -------------------------price -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Price</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="price"
+            value="<%- datas.price %> "
+          />
+        </label>
+        <!-- ----------------------stock -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Stock Count</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder=""
+            name="stock"
+            value="<%- datas.stock %> "
+          />
+        </label>
+        <!-- ----------------------offer -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400"
+            >Offer In Percentage</span
+          >
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Please Add A Number Below 100"
+            name="offer"
+            value="<%= datas.offer %> "
+          />
+        </label>
+        <!-- ------------------------pic 1 -->
+        <span class="text-gray-700 dark:text-gray-400 text-sm pt-3">
+          Pictures 1</span
+        >
+        <div class="custom-file mt-3">
+          <input type="file" name="images" id="fileToUpload" />
         </div>
-    </main>
+
+        <!-- -------------pic 2 -->
+        <span class="text-gray-700 dark:text-gray-400 text-sm pt-3">
+          Pictures 2</span
+        >
+        <div class="custom-file mt-3">
+          <input type="file" name="images" id="fileToUpload" />
+        </div>
+
+        <!-- ------------------pic 3 -->
+        <span class="text-gray-700 dark:text-gray-400 text-sm pt-3">
+          Pictures 3</span
+        >
+        <div class="custom-file mt-3">
+          <input type="file" name="images" id="fileToUpload" />
+        </div>
+
+        <!-- -------------message -->
+        <label class="block text-sm">
+          <span class="text-gray-700 dark:text-gray-400">Discription</span>
+          <input
+            class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+            placeholder="Enter some content."
+            name="discription"
+            value="discription"
+          />
+        </label>
+
+        <button
+          type="submit"
+          class="px-4 py-2 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple"
+        >
+          Submit
+        </button>
+        <button class="btn btn-secondary">Cancel</button>
+      </div>
+    </form>
+  </div>
+</main>

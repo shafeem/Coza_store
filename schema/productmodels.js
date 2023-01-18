@@ -26,6 +26,12 @@ const productscema=new mongoose.Schema({
     quantity:{
         type:Number,
         default:1
+    },actualprice:{
+        type:Number
+    },
+    offer:{
+        type:Number,
+        default:0
     }
 },{timestamps:true})
 

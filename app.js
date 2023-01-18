@@ -12,7 +12,6 @@ dotenv.config()
 
 const userrouter=require('./router/userrouter')
 const adminrouter=require('./router/adminrouter')
-const cookieParser = require('cookie-parser')
 
 app.set('views',path.join(__dirname,'views'))
 app.set('view engine','ejs')
@@ -28,7 +27,6 @@ app.use(express.json())
 app.use(logger('dev'))
 app.use(express.static(path.join(__dirname ,'public')))
 app.use(express.urlencoded({extended:true}))
-app.use(cookieParser())
 // app.use(express.static(__dirname ,'/public/user/css'))
 // var session
 app.use('/admin',adminrouter)

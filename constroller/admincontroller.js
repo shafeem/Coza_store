@@ -12,13 +12,39 @@ const bcrypt = require("bcrypt");
 const moment = require("moment");
 // const { findByIdAndUpdate } = require('../schema/adminmodels')
 
-const admindashbord = (req, res) => {
+const admindashbord = async (req, res) => {
   try {
+
+    let order = await orderscema.find().count()
+    let price = await orderscema.aggregate([
+      { $match: { orderstatus: "Delivered" } },
+     {$group:{_id:order._id,
+    total:{$sum:"$totalprice"}}},{
+      $project:{_id:0}
+    }
+    ]);
+    let sales= await orderscema.aggregate([
+      { $match: { orderstatus: "Delivered" } }])
+    console.log(sales, "this is the orderfffffffffff");
+    let user = await userscema.find({});
+
+    let preturn=await orderscema.aggregate([
+      {$match:{orderstatus:'Returned Success'}}
+    ])
+
+    console.log(preturn, "this is;;;;;;erfffffffffff");
+
     res.render("admin/dashbord", {
+      // order,
       amsg: req.session.amsg,
       adatas: req.session.admindata,
+      user,
+      price,
+      sales,
+      preturn,
     });
   } catch (error) {
+    console.log(error);
     res.redirect("/admin/error");
   }
 };
@@ -137,10 +163,11 @@ const addcategory = (req, res) => {
 
 const postcategory = async (req, res) => {
   try {
-    let { category, message } = req.body;
+    let { category, message, offer } = req.body;
     console.log(category);
     console.log(
-      "this is category ................................................"
+      req.body,
+      "this is category, ................................................"
     );
 
     category = category.toUpperCase();
@@ -148,11 +175,10 @@ const postcategory = async (req, res) => {
     console.log(
       "this is category///////////////////////////////////////////////////////////////"
     );
-    let categorydetails = { category, message };
+    let categorydetails = { category, message, offer };
     let imageurll = req.files;
     req.session.message = false;
-    let finding = await catogaryscema.findOne({ category: category });
-    console.log("finding");
+    let finding = console.log("finding");
     if (finding) {
       req.session.message = true;
       res.redirect("/admin/addcategory");
@@ -210,7 +236,8 @@ const postecategory = async (req, res) => {
       let category = req.body.category;
       category = category.toUpperCase();
       let message = req.body.message;
-      req.body = { category, message };
+      let offer = req.body.offer;
+      req.body = { category, message, offer };
 
       req.session.message = false;
 
@@ -285,20 +312,124 @@ const addproduct = async (req, res) => {
 const postaddproduct = async (req, res) => {
   try {
     console.log(req.body);
-    console.log("this is body");
     console.log(req.files);
     console.log("this is files");
     let imgss = req.files;
-    Object.assign(req.body, { images: imgss });
-    await productscema.create(req.body);
-    console.log(req.body);
-    console.log("after req.body");
-    // img=[]
+
+    let product = req.body;
+    console.log(product.category);
+    let categorydt = await catogaryscema.findOne({
+      $and: [
+        { category: { $eq: product.category } },
+        { offer: { $exists: true } },
+      ],
+    });
+    console.log(
+      categorydt,
+      "kkkkkkkk``~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~kkkkkk"
+    );
+
+    // checking if category have a offer
+    let price = product.price;
+    let savingproduct;
+    console.log("this is product price", price);
+    let categoryoffer;
+    categoryoffer = categorydt.offer;
+    let categoryofferprice;
+    let productoffer = product.offer;
+    console.log("this is category offer", categoryoffer);
+    console.log("this is product offer", productoffer);
+    let productofferprice;
+    let currentprice;
+
+    if (categoryoffer != null && productoffer == null) {
+      // if category and product also have offers
+      console.log("this is category offer", categoryoffer);
+
+      categoryofferprice = (price * categoryoffer) / 100;
+      console.log("thils is categoryofferprice", categoryofferprice);
+      console.log("this is category condition");
+
+      currentprice = req.body.price - categoryofferprice;
+      savingproduct = {
+        product_name: req.body.product_name,
+        category: req.body.category,
+        brand: req.body.brand,
+        price: currentprice,
+        stock: req.body.stock,
+        discription: req.body.discription,
+        actualprice: req.body.price,
+        offer: req.body.offer,
+      };
+      console.log(currentprice, "1111111111111111111111111111111");
+    } else if (productoffer != null && categoryoffer == null) {
+      console.log("this is product condition");
+      console.log("this is product offer", productoffer);
+      productofferprice = (price * productoffer) / 100;
+      console.log("this is productofferprice ", productofferprice);
+
+      productofferprice = (price * productoffer) / 100;
+      currentprice = req.body.price - productofferprice;
+      savingproduct = {
+        product_name: req.body.product_name,
+        category: req.body.category,
+        brand: req.body.brand,
+        price: currentprice,
+        stock: req.body.stock,
+        discription: req.body.discription,
+        actualprice: req.body.price,
+        offer: req.body.offer,
+      };
+      console.log(currentprice, "2222222222222222222222222222222222");
+    } else if (productofferprice < categoryofferprice) {
+      categoryofferprice = (price * categoryoffer) / 100;
+
+      currentprice = req.body.price - categoryofferprice;
+      savingproduct = {
+        product_name: req.body.product_name,
+        category: req.body.category,
+        brand: req.body.brand,
+        price: currentprice,
+        stock: req.body.stock,
+        discription: req.body.discription,
+        actualprice: req.body.price,
+        offer: req.body.offer,
+      };
+      console.log(currentprice, "333333333333333333333333333333333");
+    } else {
+      productofferprice = (price * productoffer) / 100;
+
+      currentprice = req.body.price - productofferprice;
+      console.log(req.body.price, "llllllllllllllllllllllllllll");
+      console.log(productofferprice, "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+      savingproduct = {
+        product_name: req.body.product_name,
+        category: req.body.category,
+        brand: req.body.brand,
+        price: currentprice,
+        stock: req.body.stock,
+        discription: req.body.discription,
+        actualprice: req.body.price,
+        offer: req.body.offer,
+      };
+      console.log(
+        currentprice,
+        "asdfghjklasdfghjklasdfghjkllllll1111111111111"
+      );
+    }
+
+    Object.assign(savingproduct, { images: imgss });
+    await productscema.create(savingproduct);
+    console.log(savingproduct);
+    console.log("44444444444444444444444444444444444444444444");
+    // img = [];
     // req.files.forEach((element) => {
-    //     img.push(element.filename)
+    //   img.push(element.filename);
     // });
+
     res.redirect("/admin/product");
   } catch (error) {
+    console.log(error);
     res.redirect("/admin/error");
   }
 };
@@ -342,19 +473,134 @@ const posteditproduct = async (req, res) => {
     console.log("this is params id");
 
     if (req.files && req.body) {
-      console.log('lolo');
+      console.log("lolo");
       if (req.files == 0) {
-        console.log('koko');
-        Object.assign(req.body, { timestamps: moment().format("DD-MM-YYYY") });
-        console.log('popo');
+        let imgss = req.files;
+
+        let product = req.body;
+        console.log(product.category);
+        let categorydt = await catogaryscema.findOne({
+          $and: [
+            { category: { $eq: product.category } },
+            { offer: { $exists: true } },
+          ],
+        });
+        console.log(
+          categorydt,
+          "kkkkkkkk``~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~kkkkkk"
+        );
+
+        // checking if category have a offer
+        let price = product.price;
+        let savingproduct;
+        console.log("this is product price", price);
+        let categoryoffer;
+        categoryoffer = categorydt.offer;
+        let categoryofferprice;
+        let productoffer = product.offer;
+        console.log("this is category offer", categoryoffer);
+        console.log("this is product offer", productoffer);
+        let productofferprice;
+        let currentprice;
+
+        if (categoryoffer != null && productoffer == null) {
+          // if category and product also have offers
+          console.log("this is category offer", categoryoffer);
+
+          categoryofferprice = (price * categoryoffer) / 100;
+          console.log("thils is categoryofferprice", categoryofferprice);
+          console.log("this is category condition");
+
+          currentprice = req.body.price - categoryofferprice;
+          savingproduct = {
+            product_name: req.body.product_name,
+            category: req.body.category,
+            brand: req.body.brand,
+            price: currentprice,
+            stock: req.body.stock,
+            discription: req.body.discription,
+            actualprice: req.body.price,
+            offer: req.body.offer,
+          };
+          console.log(currentprice, "1111111111111111111111111111111");
+        } else if (productoffer != null && categoryoffer == null) {
+          console.log("this is product condition");
+          console.log("this is product offer", productoffer);
+          productofferprice = (price * productoffer) / 100;
+          console.log("this is productofferprice ", productofferprice);
+
+          productofferprice = (price * productoffer) / 100;
+          currentprice = req.body.price - productofferprice;
+          savingproduct = {
+            product_name: req.body.product_name,
+            category: req.body.category,
+            brand: req.body.brand,
+            price: currentprice,
+            stock: req.body.stock,
+            discription: req.body.discription,
+            actualprice: req.body.price,
+            offer: req.body.offer,
+          };
+          console.log(currentprice, "2222222222222222222222222222222222");
+        } else if (productofferprice < categoryofferprice) {
+          categoryofferprice = (price * categoryoffer) / 100;
+
+          currentprice = req.body.price - categoryofferprice;
+          savingproduct = {
+            product_name: req.body.product_name,
+            category: req.body.category,
+            brand: req.body.brand,
+            price: currentprice,
+            stock: req.body.stock,
+            discription: req.body.discription,
+            actualprice: req.body.price,
+            offer: req.body.offer,
+          };
+          console.log(currentprice, "333333333333333333333333333333333");
+        } else {
+          productofferprice = (price * productoffer) / 100;
+
+          currentprice = req.body.price - productofferprice;
+          console.log(req.body.price, "llllllllllllllllllllllllllll");
+          console.log(productofferprice, "kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk");
+          savingproduct = {
+            product_name: req.body.product_name,
+            category: req.body.category,
+            brand: req.body.brand,
+            price: currentprice,
+            stock: req.body.stock,
+            discription: req.body.discription,
+            actualprice: req.body.price,
+            offer: req.body.offer,
+          };
+          console.log(
+            currentprice,
+            "asdfghjklasdfghjklasdfghjkllllll1111111111111"
+          );
+        }
+
+        // Object.assign(savingproduct, { images: imgss });
+        // await productscema.create(savingproduct);
+        // console.log(savingproduct);
+        // console.log("44444444444444444444444444444444444444444444");
+        // img = [];
+        // req.files.forEach((element) => {
+        //   img.push(element.filename);
+        // });
+
+        console.log("koko");
+        Object.assign(savingproduct, {
+          timestamps: moment().format("DD-MM-YYYY"),
+        });
+        console.log("popo");
         await productscema.findByIdAndUpdate(
           req.params.id,
-          { $set: req.body },
+          { $set: savingproduct },
           {
             upsert: true,
             new: true,
             runValidators: true,
-          },
+          }
           // {
           //   updatedAt: moment().format("DD-MM-YYYY"),
           // }
@@ -370,7 +616,7 @@ const posteditproduct = async (req, res) => {
         );
         await productscema.findByIdAndUpdate(
           req.params.id,
-          { $set: req.body },
+          { $set: savingproduct },
           {
             upsert: true,
             new: true,
@@ -484,7 +730,7 @@ const deletebanner = async (req, res) => {
 };
 const orders = async (req, res) => {
   try {
-    let orderdetails = await orderscema.find({}).sort({createdAt:-1});
+    let orderdetails = await orderscema.find({}).sort({ createdAt: -1 });
     console.log(orderdetails);
     res.render("admin/orders", { orderdetails });
   } catch (error) {
@@ -548,9 +794,9 @@ const error = (req, res) => {
   console.log("in error page");
   res.render("admin/error");
 };
-const coupon =async (req, res) => {
-  let coupon=await couponscema.find({})
-  res.render("admin/coupon",{coupon});
+const coupon = async (req, res) => {
+  let coupon = await couponscema.find({});
+  res.render("admin/coupon", { coupon });
 };
 const addcoupon = (req, res) => {
   try {
@@ -559,45 +805,143 @@ const addcoupon = (req, res) => {
     res.redirect("/admin/error");
   }
 };
-const postcoupon =async (req, res) => {
+const postcoupon = async (req, res) => {
   try {
     console.log("in post coupon page");
     console.log(req.body);
 
-    await couponscema.create(req.body)
-    res.redirect('/admin/coupon')
-
+    await couponscema.create(req.body);
+    res.redirect("/admin/coupon");
   } catch (error) {
     console.log(error);
     res.redirect("/admin/error");
   }
 };
-const coupondelete=async(req,res)=>{
+const coupondelete = async (req, res) => {
   try {
-  //   console.log(req.body.id);
-  // await couponscema.findByIdAndDelete({_id:req.body.id})
-  res.redirect('/admin/coupon')
+    //   console.log(req.body.id);
+    // await couponscema.findByIdAndDelete({_id:req.body.id})
+    res.redirect("/admin/coupon");
   } catch (error) {
     console.log(error);
-    res.redirect('/admin/error')
+    res.redirect("/admin/error");
+  }
+};
+const orderapproval = async (req, res) => {
+  console.log(req.body, "lllllllllllllllllllll");
+
+  await orderscema.findByIdAndUpdate(req.body.id, {
+    orderstatus: "Returned Success",
+    track: "Returned Success",
+  });
+
+  await userscema.findByIdAndUpdate(req.body.user, {
+    $inc: {
+      wallet: req.body.price,
+    },
+  });
+
+  res.json({ status: true });
+};
+const salesreport=async(req,res)=>{
+  console.log('this is sales report page');
+  let order=await orderscema.find({})
+  console.log(order);
+  const salesreport = await orderscema.aggregate([
+    {
+      $match: { orderstatus: { $eq: "Delivered" } },
+    },
+    {
+      $group: {
+        _id: {
+          month: { $month: "$createdAt" },
+          day: { $dayOfMonth: "$createdAt" },
+          year: { $year: "$createdAt" },
+        },
+        totalprice: { $sum: "$totalprice" },
+        products: { $sum: { $size: "$products.quantity" } },
+        count: { $sum: 1 },
+      },
+     
+    },
+    { $sort: { date: -1 } },
+  ]);
+  console.log(salesreport);
+  res.render('admin/salesreport',{
+    order,
+    salesreport,
+  })
+}
+const monthlyreport=async (req,res)=>{
+  try{
+    const months = [
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
+    ];
+    const salesreport = await orderscema.aggregate([
+      {
+        $match: { orderstatus: { $eq: "Delivered" } },
+      },
+      {
+        $group: {
+          _id: { month: { $month: "$createdAt" } },
+          totalprice: { $sum: "$totalprice" },
+          products: { $sum: { $size: "$products" } },
+          count: { $sum: 1 },
+        },
+      },
+      { $sort: { date: -1 } },
+    ]);
+    const newsalesreport = salesreport.map((el) => {
+      let newEl = { ...el };
+      newEl._id.month = months[newEl._id.month - 1];
+      return newEl;
+    });
+    res.render("admin/monthlyreport", { salesreport: newsalesreport });
+  } catch (error) {
+    res.render("admin/error");
+    console.log(error);
   }
 }
-const orderapproval=async (req,res)=>{
-  console.log(req.body,'lllllllllllllllllllll');
+const yearlyreport = async (req, res) => {
+  try {
+    const salesreport = await orderscema.aggregate([
+      {
+        $match: { orderstatus: { $eq: "Delivered" } },
+      },
+      {
+        $group: {
+          _id: { year: { $year: "$createdAt" } },
+          totalprice: { $sum: "$totalprice" },
+          products: { $sum: { $size: "$products" } },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: {
+          createdAt: -1,
+        },
+      },
+    ]);
 
-  await orderscema.findByIdAndUpdate(req.body.id,
-    {orderstatus:'Returned Success',
-    track:'Returned Success'})
-  
-  await userscema.findByIdAndUpdate(req.body.user,
-    {
-      $inc:{
-        wallet:req.body.price
-      }
-    })  
+    // const filterOrder = await Order.find({})
+    res.render("admin/yearlyreport", { salesreport });
+  } catch (error) {
+    console.log(error);
+    res.render("admin/error");
+  }
+};
 
-  res.json({status:true})
-}
 
 module.exports = {
   admindashbord,
@@ -635,5 +979,7 @@ module.exports = {
   postcoupon,
   coupondelete,
   orderapproval,
-  
+  salesreport,
+  monthlyreport,
+  yearlyreport
 };

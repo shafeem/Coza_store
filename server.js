@@ -8,8 +8,11 @@ mongoose.set("strictQuery", false)
 async function runConnection(){
     try{
         await mongoose.connect(
-             "mongodb://127.0.0.1:27017/coza_store",
-             // 'mongodb+srv://shafeem:<password>@cluster0.r58oknr.mongodb.net/test',
+            //  "mongodb://127.0.0.1:27017/coza_store",
+
+            'mongodb+srv://royalhub:royalhub@royalhub.56b17fj.mongodb.net/royalhub?retryWrites=true&w=majority',
+            
+            
              {
                  useNewUrlParser: true,
                  useUnifiedTopology: true,

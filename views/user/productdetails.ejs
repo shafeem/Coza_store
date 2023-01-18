@@ -287,7 +287,7 @@ box-shadow: -1px 5px 15px black; */
 
           <li class="nav-item p-b-10">
             <a class="nav-link" data-toggle="tab" href="#reviews" role="tab"
-              >Reviews (1)</a
+              >Reviews (<%= review.length +1%> )</a
             >
           </li>
         </ul>
@@ -395,8 +395,69 @@ box-shadow: -1px 5px 15px black; */
                     </div>
                   </div>
 
-                  <!-- Add review -->
-                  <form class="w-full">
+                  <% if (review) { %>
+
+                    <% for( let i = 0; i < review.length; i++ ) { %>
+                    
+                    <div class="flex-w flex-t p-b-68">
+                      <div
+                        class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6"
+                      >
+                        <img src="/user/images/avatar-01.jpg" alt="AVATAR" />
+                      </div>
+  
+                      <div class="size-207">
+                        <div class="flex-w flex-sb-m p-b-17">
+                          <span class="mtext-107 cl2 p-r-20">
+                            <%= review[i].name%> 
+                          </span>
+                          <% if (review[i].rating==1) { %>
+                            <span class="fs-18 cl11">
+                              <i class="zmdi zmdi-star"></i>
+                            </span>
+                          <% }else if (review[i].rating==2) { %>
+                            <span class="fs-18 cl11">
+                              <i class="zmdi zmdi-star"></i>
+                             <i class="zmdi zmdi-star"></i>
+                            </span>
+                            <% } else if (review[i].rating==3) { %>
+                              <span class="fs-18 cl11">
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                              </span>
+                            <%  } else if (review[i].rating==4) { %>
+                              <span class="fs-18 cl11">
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                              </span>
+                            <%  } else{%>
+                              <span class="fs-18 cl11">
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                                <i class="zmdi zmdi-star"></i>
+                              </span>
+                            <%  }  %>
+                         
+                        </div>
+  
+                        <p class="stext-102 cl6">
+                          <%= review[i].review %> 
+                        </p>
+                      </div>
+                    </div>
+                    <% } %>
+
+                  <% } %>
+
+
+                  
+                  <!-- Add review
+                  <form class="w-full" method="post">
                     <h5 class="mtext-108 cl2 p-b-7">Add a review</h5>
 
                     <p class="stext-102 cl6">
@@ -465,7 +526,7 @@ box-shadow: -1px 5px 15px black; */
                     >
                       Submit
                     </button>
-                  </form>
+                  </form> -->
                 </div>
               </div>
             </div>

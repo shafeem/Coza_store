@@ -1,0 +1,109 @@
+<%- include('partials/adminheader.ejs') %>
+
+<main class="h-full pb-16 overflow-y-auto">
+  <div class="container grid px-6 mx-auto">
+    <h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+      Sales Report
+    </h2>
+    <!-- CTA -->
+    <a
+      class="flex items-center justify-between p-4 mb-8 text-sm font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
+      href="#"
+    >
+      <div class="flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20"></svg>
+      </div>
+    </a>
+
+    <div class="d-flex pb-4" style="justify-content: space-around " >
+      <!-- Card -->
+      <div
+        class="flex items-center p-4  rounded-lg shadow-xs dark:bg-gray-800 "
+      >
+        <div>
+          <a
+            href="/admin/salesreport"
+            class="text-lg font-semibold text-gray-700 dark:text-gray-200 "
+          >
+            Daily Report
+          </a>
+        </div>
+      </div>
+      <!-- Card -->
+      <div
+        class="flex items-center p-4  rounded-lg shadow-xs dark:bg-gray-800 font-semibold text-purple-100 bg-purple-600 rounded-lg shadow-md focus:outline-none focus:shadow-outline-purple"
+      >
+        <div>
+          <a
+            href="/admin/monthlyreport"
+            class="text-lg font-semibold text-gray-700 dark:text-gray-200"
+          >
+            Monthly Report
+          </a>
+        </div>
+      </div>
+      <!-- Card -->
+      <div
+        class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
+      >
+        <div>
+          <a
+            href="/admin/yearlyreport"
+            class="text-lg font-semibold text-gray-700 dark:text-gray-200"
+          >
+            Year Report
+          </a>
+        </div>
+      </div>
+    </div>
+    <!-- With avatar -->
+
+    <div class="w-full mb-8 overflow-hidden rounded-lg shadow-xs ">
+      <div class="w-full overflow-x-auto">
+        <table class="w-full whitespace-no-wrap">
+          <thead>
+            <tr
+              class="text-xs font-semibold tracking-wide text-left text-gray-500 uppercase border-b dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800"
+            >
+              <th class="px-4 py-3">Month</th>
+              <th class="px-4 py-3">Total Order</th>
+              <th class="px-4 py-3">Total Sold Product</th>
+              <th class="px-4 py-3">Amount</th>
+              <th class="px-4 py-3">Profit</th>
+            </tr>
+          </thead>
+          <tbody
+            class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800"
+          >
+            <% for( let sales of salesreport ) { %>
+
+            <tr class="text-gray-700 dark:text-gray-400">
+              <td class="px-4 py-3">
+                <div class="flex items-center text-sm">
+                  <!-- Avatar with inset shadow -->
+                  <div>
+                    <p class="font-semibold"><%= sales._id.month %>  </p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-4 py-3 text-sm"><%= sales.count %> </td>
+              <td class="px-4 py-3 text-xs">
+                <span
+                  class="px-2 py-1 font-semibold leading-tight text-green-700 bg-green-100 rounded-full dark:bg-green-700 dark:text-green-100"
+                >
+                  <%= sales.products %> 
+                </span>
+              </td>
+              <td class="px-4 py-3 text-sm"><%= sales.totalprice %> </td>
+              <% let profit=Math.round((sales.totalprice * 10)/100 )%>
+              <td>
+                <span><%= profit %> </span>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>

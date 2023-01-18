@@ -1,126 +1,229 @@
 <%- include('partials/userheader.ejs') %>
 
-	<!-- Product -->
-	<!-- Product -->
-	<section class="bg0 p-t-23 p-b-140">
-		<div class="container">
-			<div class="pt-5">
-				<h3 class="ltext-103 cl5 p-t-100">
-					Product Overview
-				</h3>
-			</div>
+<!-- Product -->
+<!-- Product -->
+    <section class="bg0 p-t-23 p-b-140"> <div class="container">
+        <div class="pt-5">
+            <h3 class="ltext-103 cl5 p-t-100">
+                Product Overview
+            </h3>
+        </div>
 
-			<div class="flex-w flex-sb-m p-b-52 p-t-10">
-				<div class="flex-w flex-l-m filter-tope-group m-tb-10">
-					<a href="/product?sort=allproducts" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1" >
-						All Products
-					</a>
+        <div class="flex-w flex-sb-m p-b-52 p-t-10">
+            <div class="flex-w flex-l-m filter-tope-group m-tb-10">
+                <a href="/product?&page=1&limit=8" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5 how-active1">
+                    All Products
+                </a>
 
-					<a href="/product?sort=women" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" >
-						Women
-					</a>
+                <a href="/product?sort=WOMENS&page=1&limit=8" class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5">
+                    Women
+                </a>
 
-					<a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".men">
-						Men
-					</a>
+                <a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/product?sort=MENS&page=1&limit=8">
+                    Men
+                </a>
 
-					<a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".bag">
-						Bag
-					</a>
+                <!-- <a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/product?sort=BAGS">
+                						Bag
+                					</a> -->
 
-					<a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".shoes">
-						Shoes
-					</a>
+                <a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/product?sort=SHOES&page=1&limit=8">
+                    Shoes
+                </a>
 
-					<a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" data-filter=".watches">
-						Watches
-					</a>
-				</div>
+                <a class="stext-106 cl6 hov1 bor3 trans-04 m-r-32 m-tb-5" href="/product?sort=WATCHES&page=1&limit=8">
+                    Watches
+                </a>
+            </div>
 
-				<div class="flex-w flex-c-m m-tb-10">
-					<div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
-						<i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
-						<i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
-						Search
-					</div>
-				</div>
+            <div class="flex-w flex-c-m m-tb-10">
+                <div class="flex-c-m stext-106 cl6 size-105 bor4 pointer hov-btn3 trans-04 m-tb-4 js-show-search">
+                    <i class="icon-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-search"></i>
+                    <i class="icon-close-search cl2 m-r-6 fs-15 trans-04 zmdi zmdi-close dis-none"></i>
+                    Search
+                </div>
+            </div>
 
-				<!-- Search product -->
-				<div class="dis-none panel-search w-full p-t-10 p-b-15">
-					<div class="bor8 dis-flex p-l-15">
-						<button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
-							<i class="zmdi zmdi-search"></i>
-						</button>
+            <!-- Search product -->
+            <div class="dis-none panel-search w-full p-t-10 p-b-15">
+                <div class="bor8 dis-flex p-l-15">
+                    <button class="size-113 flex-c-m fs-16 cl2 hov-cl1 trans-04">
+                        <i class="zmdi zmdi-search"></i>
+                    </button>
 
-						<input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product"
-							placeholder="Search">
-					</div>
-				</div>
+                    <input class="mtext-107 cl2 size-114 plh2 p-r-15" type="text" name="search-product" placeholder="Search"></div>
+                </div>
 
-				<!-- Filter -->
-				
-			</div>
+                <!-- Filter -->
 
-			<!-- -------------starting of product -->
-
-			<% if (productdts) { %>
-			 
-
-			<div class="row isotope-grid">
-				<% for(let i=0; i<productdts.length; i++) { %>
-					 
-					<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
-						<!-- Block2 -->
-						<div class="block2">
-							<div class="block2-pic hov-img0">
-								<!-- <img src="/user/images/product-01.jpg" alt="IMG-PRODUCT"> -->
-
-								<img src="\image\<%- productdts[i].images[0].filename %>" alt="IMG-BANNER">
-
-								<a href="#"
-									class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-									Quick View
+            </div>
+            <div class="demo">
+				<nav class="pagination-outer" aria-label="Page navigation" style="padding-left: 1025px; padding-bottom: 30px">
+					<ul class="pagination">
+						<li class="page-item">
+							<% if (pagenation.previous) { %>
+								<a href="/product?page=<%= pagenation.previous.page %>&limit=<%= pagenation.previous.limit %>" class="page-link" aria-label="Previous">
+									<span aria-hidden="true">«</span>
 								</a>
-							</div>
+							<% } %>
+						</li>
+						<li class="page-item active">
+							<% if (pagenation.current.page !=NaN) { %>
+								<a class="page-link" href="#"><%= pagenation.current.page %></a>
+							<% } %>
+						</li>
+						<!-- <li class="page-item">
+													<a class="page-link" href="#">2</a>
+												</li>
+												<li class="page-item active">
+													<a class="page-link" href="#">3</a>
+												</li>
+												<li class="page-item">
+													<a class="page-link" href="#">4</a>
+												</li>
+												<li class="page-item">
+													<a class="page-link" href="#">5</a>
+												</li> -->
+						<li class="page-item">
+							<% if (pagenation.next) { %>
+								<a href="/product?page=<%= pagenation.next.page %>&limit=<%= pagenation.next.limit %>" class="page-link" aria-label="Next">
+									<span aria-hidden="true">»</span>
+								</a>
+							<% } %>
+						</li>
+					</ul>
+				</nav>
+			  </div>
+			  
+            <!-- -------------starting of product -->
 
-							<div class="block2-txt flex-w flex-t p-t-14">
-								<div class="block2-txt-child1 flex-col-l ">
-									<a href="/productdetails/<%- productdts[i]._id %>"
-										class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-										<%- productdts[i].product_name %>
-									</a>
-
-									<span class="stext-105 cl3">
-										$<%- productdts[i].price %>
-									</span>
-								</div>
-
-								<div class="block2-txt-child2 flex-r p-t-3">
-									<a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-										<img class="icon-heart1 dis-block trans-04"
-											src="/user/images/icons/icon-heart-01.png" alt="ICON">
-										<img class="icon-heart2 dis-block trans-04 ab-t-l"
-											src="/user/images/icons/icon-heart-02.png" alt="ICON">
-									</a>
-								</div>
-							</div>
-						</div>
-					</div>
-					<% } %>
-
-
-				</div>
-				
-				<!-- Load more -->
-				<div class="flex-c-m flex-w w-full p-t-45">
-					<a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
-						Load More
-					</a>
-				</div>
-			<% } %>
+            <% if (productdts) { %>
 
 
-		</div>
-	</section>
+                <div class="row isotope-grid">
+                    <% for(let i=0; i<productdts.length; i++) { %>
 
-		<%- include('partials/userfooter.ejs') %>
+                        <div
+                            class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item women">
+                            <!-- Block2 -->
+                            <div class="block2">
+                                <div
+                                    class="block2-pic hov-img0">
+                                    <!-- <img src="/user/images/product-01.jpg" alt="IMG-PRODUCT"> -->
+
+                                    <img src="\image\<%- productdts[i].images[0].filename %>" alt="IMG-BANNER">
+
+                                        <a href="#" class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
+                                            Quick View
+                                        </a>
+                                    </div>
+
+                                    <div class="block2-txt flex-w flex-t p-t-14">
+                                        <div class="block2-txt-child1 flex-col-l ">
+                                            <a href="/productdetails/<%- productdts[i]._id %>" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
+                                                <%- productdts[i].product_name %>
+                                            </a>
+
+                                            <span class="stext-105 cl3">
+                                               <del><%= productdts[i].actualprice%> </del> $<%- productdts[i].price %>
+                                            </span>
+                                        </div>
+
+                                        <div class="block2-txt-child2 flex-r p-t-3">
+                                            <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
+                                                <img class="icon-heart1 dis-block trans-04" src="/user/images/icons/icon-heart-01.png" alt="ICON">
+                                                    <img class="icon-heart2 dis-block trans-04 ab-t-l" src="/user/images/icons/icon-heart-02.png" alt="ICON"></a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <% } %>
+
+
+                            </div>
+
+                            <!-- Load more -->
+                            <div class="flex-c-m flex-w w-full p-t-45">
+                                <a href="#" class="flex-c-m stext-101 cl5 size-103 bg2 bor1 hov-btn1 p-lr-15 trans-04">
+                                    Load More
+                                </a>
+                            </div>
+                        <% } %>
+
+
+                    </div>
+                </section>
+
+                <%- include('partials/userfooter.ejs') %>
+<style>
+.pagination-outer{ text-align: center; }
+.pagination{
+    font-family: 'Ubuntu', sans-serif;
+    display: inline-flex;
+    position: relative;
+}
+.pagination li a.page-link{
+    color: #333;
+    background-color: #e7e7e7;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 39px;
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    margin: 0 5px;
+    border: none;
+    border-radius: 10px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s ease 0s;
+}
+.pagination li a.page-link:hover,
+.pagination li a.page-link:focus,
+.pagination li.active a.page-link:hover,
+.pagination li.active a.page-link{
+    color: #fff;
+    background: transparent;
+}
+.pagination li a.page-link:before,
+.pagination li a.page-link:after{
+    content: '';
+    background: linear-gradient(to right, #706fd3 50%, transparent 50%);
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    transition: all 0.4s ease 0s;
+}
+.pagination li a.page-link:after{
+    background: linear-gradient(to right, #474787 50%, transparent 50%);
+    transform: rotateY(180deg);
+    top: auto;
+    bottom: 0;
+}
+.pagination li a.page-link:hover:before,
+.pagination li a.page-link:focus:before,
+.pagination li.active a.page-link:before,
+.pagination li a.page-link:hover:after,
+.pagination li a.page-link:focus:after,
+.pagination li.active a.page-link:after{
+    height: 85%;
+    opacity: 1;
+}
+@media only screen and (max-width: 480px){
+    .pagination{
+        font-size: 0;
+        border: none;
+        display: inline-block;
+    }
+    .pagination li{
+        display: inline-block;
+        vertical-align: top;
+        margin: 0 0 10px;
+    }
+}
+</style>

@@ -1,363 +1,266 @@
+<!-- signup Form -->
+<!-- <% if (errs) { %>
+        <h6 class="text-danger mt-3"><%= errs %></h6>
+        <% } %>
+        <form action="/signup" method="post">
+          <input
+            type="text"
+            id="login"
+            class="fadeIn second mt-5"
+            name="name"
+            placeholder="Name"
+            required
+          />
+          <input
+            type="text"
+            id="login"
+            class="fadeIn second"
+            name="email"
+            placeholder="Email"
+            required
+          /> -->
+<!-- <input
+            type="number"
+            class="fadeIn third"
+            name="phone"
+            placeholder="Mobile Number"
+            required
+          /> -->
+<!-- <input
+            type="number"
+            class="fadeIn third"
+            name="number"
+            placeholder="Number"
+            required
+          />
+          <input
+            type="password"
+            id="password"
+            class="fadeIn third"
+            name="password"
+            placeholder="Password"
+            required
+          />
+          <input type="submit" class="fadeIn fourth mt-4 b" value="Signup" />
+        </form> -->
+<!-- Remind Passowrd -->
+<!-- <div id="formFooter">
+          <a class="underlineHover pr-2" href="#">Forgot Password?</a>
+          <a class="underlineHover pr-2" href="/login">Log in?</a>-->
 <!DOCTYPE html>
-<html lang="en">
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>RegistrationForm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Signup</title>
-    <link rel="stylesheet" type="text/css" href="/user/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- MATERIAL DESIGN ICONIC FONT -->
+    <link
+      rel="stylesheet"
+      href="/signup/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css"
+    />
 
-</head>
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
 
-<body style="background: url('/user/images/slide-01.jpg'); filter: brightness(0.9);">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!------ Include the above in your HEAD tag ---------->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
-    <div class="wrapper fadeInDown">
-        <h4>Signup</h4>
+    <!-- STYLE CSS -->
+    <link rel="stylesheet" href="/signup/css/style.css" />
+  </head>
 
-        <div id="formContent">
-            <!-- Tabs Titles -->
-
-            <!-- Icon -->
-            <!-- <div class="fadeIn first">
-          <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
-        </div> -->
-
-            <!-- signup Form -->
-            <% if (errs) { %>
-                <h6 class="text-danger mt-3">
-                    <%= errs %>
-                </h6>
-                <% } %>
-                    <form action="/signup" method="post">
-                        <input type="text" id="login" class="fadeIn second mt-5" name="name" placeholder="Name"
-                            required>
-                        <input type="text" id="login" class="fadeIn second " name="email" placeholder="Email" required>
-                        <input type="number" id="password" class="fadeIn third " name="phone"
-                            placeholder="Mobile Number" required>
-                        <input type="password" id="password" class="fadeIn third " name="password"
-                            placeholder="Password" required>
-                        <input type="submit" class="fadeIn fourth mt-4 b" value="Signup">
-                    </form>
-
-
-
-                    <!-- Remind Passowrd -->
-                    <div id="formFooter">
-                        <a class="underlineHover pr-2" href="#">Forgot Password?</a>
-                        <a class="underlineHover pr-2" href="/login">Log in?</a>
-
-                    </div>
-
+  <body>
+    <div
+      class="wrapper"
+      style="background-image: url('/signup/images/bg-registration-form-1.jpg')"
+    >
+      <div class="inner">
+        <div class="image-holder">
+          <img src="/signup/images/registration-form-1.jpg" alt="" />
         </div>
+
+        <form action="/signup" method="post" id="formsubmit">
+          <h3>Registration Form</h3>
+
+          <% if (errs) { %>
+          <h6 class="text-danger"><%= errs %></h6>
+          <% } %>
+
+          <div class="form-wrapper">
+            <input
+              type="text"
+              placeholder="Username"
+              class="form-control"
+              name="name"
+              id="nameid"
+            />
+            <i class="zmdi zmdi-account"></i>
+          </div>
+
+          <p id="userchecker"></p>
+
+          <div class="form-wrapper">
+            <input
+              type="text"
+              placeholder="Email Address"
+              class="form-control"
+              name="email"
+              id="emailid"
+            />
+            <i class="zmdi zmdi-email"></i>
+          </div>
+
+          <div class="form-wrapper">
+            <input
+              type="text"
+              placeholder="Phone Number"
+              class="form-control"
+              name="phone"
+              id="phoneid"
+            />
+            <i class="zmdi zmdi-account"></i>
+          </div>
+
+          <div class="form-wrapper">
+            <input
+              type="password"
+              placeholder="Password"
+              class="form-control"
+              name="password"
+              id="passwordid"
+            />
+            <i class="zmdi zmdi-lock"></i>
+          </div>
+          <p id="passwordchecker"></p>
+
+          <div class="form-wrapper">
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              class="form-control"
+              name="confirmpassword"
+              id="confirmid"
+            />
+            <i class="zmdi zmdi-lock"></i>
+          </div>
+          <p id="confirmidchecker"></p>
+          <!-- <input type="submit" class="fadeIn fourth mt-4 b" value="Signup" />
+         -->
+          <button type="submit" id="submitbtn">
+            Register
+            <i class="zmdi zmdi-arrow-right"></i>
+          </button>
+        </form>
+      </div>
     </div>
-
-
-    <style>
-        html {
-            background-color: #56baed;
-        }
-
-        body {
-            font-family: "Poppins", sans-serif;
-            height: 100vh;
-        }
-
-        a {
-            color: #92badd;
-            display: inline-block;
-            text-decoration: none;
-            font-weight: 400;
-        }
-
-        h2 {
-            text-align: center;
-            font-size: 16px;
-            font-weight: 600;
-            text-transform: uppercase;
-            display: inline-block;
-            margin: 40px 8px 10px 8px;
-            color: #cccccc;
-        }
-
-
-
-        /* STRUCTURE */
-
-        .wrapper {
-            display: flex;
-            align-items: center;
-            flex-direction: column;
-            justify-content: center;
-            width: 100%;
-            min-height: 100%;
-            padding: 20px;
-        }
-
-        #formContent {
-            -webkit-border-radius: 10px 10px 10px 10px;
-            border-radius: 10px 10px 10px 10px;
-            background: #fff;
-            padding: 30px;
-            width: 90%;
-            max-width: 450px;
-            position: relative;
-            padding: 0px;
-            -webkit-box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
-            box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.3);
-            text-align: center;
-        }
-
-        #formFooter {
-            background-color: #f6f6f6;
-            border-top: 1px solid #dce8f1;
-            padding: 25px;
-            text-align: center;
-            -webkit-border-radius: 0 0 10px 10px;
-            border-radius: 0 0 10px 10px;
-        }
-
-
-
-        /* TABS */
-
-        h2.inactive {
-            color: #cccccc;
-        }
-
-        h2.active {
-            color: #0d0d0d;
-            border-bottom: 2px solid #5fbae9;
-        }
-
-
-
-        /* FORM TYPOGRAPHY*/
-
-        input[type=button],
-        input[type=submit],
-        input[type=reset] {
-            background-color: #56baed;
-            border: none;
-            color: white;
-            padding: 15px 80px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            text-transform: uppercase;
-            font-size: 13px;
-            -webkit-box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
-            box-shadow: 0 10px 30px 0 rgba(95, 186, 233, 0.4);
-            -webkit-border-radius: 5px 5px 5px 5px;
-            border-radius: 5px 5px 5px 5px;
-            margin: 5px 20px 40px 20px;
-            -webkit-transition: all 0.3s ease-in-out;
-            -moz-transition: all 0.3s ease-in-out;
-            -ms-transition: all 0.3s ease-in-out;
-            -o-transition: all 0.3s ease-in-out;
-            transition: all 0.3s ease-in-out;
-        }
-
-        input[type=button]:hover,
-        input[type=submit]:hover,
-        input[type=reset]:hover {
-            background-color: #39ace7;
-        }
-
-        input[type=button]:active,
-        input[type=submit]:active,
-        input[type=reset]:active {
-            -moz-transform: scale(0.95);
-            -webkit-transform: scale(0.95);
-            -o-transform: scale(0.95);
-            -ms-transform: scale(0.95);
-            transform: scale(0.95);
-        }
-
-        input[type=text],
-        input[type=password],
-        input[type=number] {
-            background-color: #f6f6f6;
-            border: none;
-            color: #0d0d0d;
-            padding: 15px 32px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 5px;
-            width: 85%;
-            border: 2px solid #f6f6f6;
-            -webkit-transition: all 0.5s ease-in-out;
-            -moz-transition: all 0.5s ease-in-out;
-            -ms-transition: all 0.5s ease-in-out;
-            -o-transition: all 0.5s ease-in-out;
-            transition: all 0.5s ease-in-out;
-            -webkit-border-radius: 5px 5px 5px 5px;
-            border-radius: 5px 5px 5px 5px;
-        }
-
-        input[type=text]:focus,
-        input[type=password]:focus,
-        input[type=number]:focus {
-            background-color: #fff;
-            border-bottom: 2px solid #5fbae9;
-        }
-
-        input[type=text]:placeholder input[type=password]:placeholder input[type=number]:placeholder {
-            color: #cccccc;
-        }
-
-
-
-        /* ANIMATIONS */
-
-        /* Simple CSS3 Fade-in-down Animation */
-        .fadeInDown {
-            -webkit-animation-name: fadeInDown;
-            animation-name: fadeInDown;
-            -webkit-animation-duration: 1s;
-            animation-duration: 1s;
-            -webkit-animation-fill-mode: both;
-            animation-fill-mode: both;
-        }
-
-        @-webkit-keyframes fadeInDown {
-            0% {
-                opacity: 0;
-                -webkit-transform: translate3d(0, -100%, 0);
-                transform: translate3d(0, -100%, 0);
-            }
-
-            100% {
-                opacity: 1;
-                -webkit-transform: none;
-                transform: none;
-            }
-        }
-
-        @keyframes fadeInDown {
-            0% {
-                opacity: 0;
-                -webkit-transform: translate3d(0, -100%, 0);
-                transform: translate3d(0, -100%, 0);
-            }
-
-            100% {
-                opacity: 1;
-                -webkit-transform: none;
-                transform: none;
-            }
-        }
-
-        /* Simple CSS3 Fade-in Animation */
-        @-webkit-keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @-moz-keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-
-            to {
-                opacity: 1;
-            }
-        }
-
-        .fadeIn {
-            opacity: 0;
-            -webkit-animation: fadeIn ease-in 1;
-            -moz-animation: fadeIn ease-in 1;
-            animation: fadeIn ease-in 1;
-
-            -webkit-animation-fill-mode: forwards;
-            -moz-animation-fill-mode: forwards;
-            animation-fill-mode: forwards;
-
-            -webkit-animation-duration: 1s;
-            -moz-animation-duration: 1s;
-            animation-duration: 1s;
-        }
-
-        .fadeIn.first {
-            -webkit-animation-delay: 0.4s;
-            -moz-animation-delay: 0.4s;
-            animation-delay: 0.4s;
-        }
-
-        .fadeIn.second {
-            -webkit-animation-delay: 0.6s;
-            -moz-animation-delay: 0.6s;
-            animation-delay: 0.6s;
-        }
-
-        .fadeIn.third {
-            -webkit-animation-delay: 0.8s;
-            -moz-animation-delay: 0.8s;
-            animation-delay: 0.8s;
-        }
-
-        .fadeIn.fourth {
-            -webkit-animation-delay: 1s;
-            -moz-animation-delay: 1s;
-            animation-delay: 1s;
-        }
-
-        /* Simple CSS3 Fade-in Animation */
-        .underlineHover:after {
-            display: block;
-            left: 0;
-            bottom: -10px;
-            width: 0;
-            height: 2px;
-            background-color: #56baed;
-            content: "";
-            transition: width 0.2s;
-        }
-
-        .underlineHover:hover {
-            color: #0d0d0d;
-        }
-
-        .underlineHover:hover:after {
-            width: 100%;
-        }
-
-
-
-        /* OTHERS */
-
-        *:focus {
-            outline: none;
-        }
-
-        #icon {
-            width: 60%;
-        }
-    </style>
-    <script src="/user/vendor/bootstrap/js/popper.js"></script>
-    <script src="/user/vendor/bootstrap/js/bootstrap.min.js"></script>
-</body>
-
+  </body>
 </html>
+
+<script
+  src="https://code.jquery.com/jquery-3.6.3.js"
+  integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
+  crossorigin="anonymous"
+></script>
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
+  integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+
+<script>
+  $(document).ready(function () {
+    // checking username
+    $("#userchecker").hide();
+    let userchecker = true;
+    $("#nameid").keyup(function () {
+      validatename();
+    });
+
+    function validatename() {
+      let name = $("#nameid").val();
+      if (name.length == "") {
+        $("#userchecker").show();
+        userchecker = false;
+        return false;
+      } else if (name.length <= 3) {
+        $("#usercheker").show();
+        $("#userchecker").html("* Name Length Must Be Greater Than 3");
+        userchecker = false;
+        return false;
+      } else {
+        $("#usercheker").hide();
+      }
+    }
+    const email = getElementById("emailid");
+    email.addEventListener("blur", () => {
+      let regex = /^([\-\.0-9a-zA-Z]+)@([\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
+      let emailvalue = email.value;
+      if (regex.test(emailvalue)) {
+        email.classList.remove("is-invalid");
+        emailerror = true;
+      } else {
+        email.classList.add("is-invalid");
+        emailerror = false;
+      }
+    });
+    $("#passwordchecker").hide();
+    let passworderror = true;
+    $("#passwordid").keyup(function () {
+      validatepassword();
+    });
+    async function validatepassword() {
+      let passwordvalue = $("#passwordid").val();
+      if (passwordvalue == "") {
+        $("#passwordchecker").show();
+        passworderror = false;
+        return false;
+      } else if (passwordvalue <= 3) {
+        $("#passwordchecker").show();
+        $("#passwordchecker").html("*Password Length Must Be Greater Than 3");
+        $("#passwordchecker").css("color", "red");
+        passworderror = false;
+        return false;
+      } else {
+        $("#passwordchecker").hide();
+      }
+    }
+    $("#confirmidchecker").hide();
+    let confirmerror = true;
+    $("#confirmid").keyup(function () {
+      validatecomfirmpassword();
+    });
+    function validatecomfirmpassword() {
+      let confirmvalue = $("#confirmid").val();
+      let passwordvalue = $("#passwordid").val();
+      if (confirmvalue != passwordvalue) {
+        $("#confirmidchecker").show();
+        $("#confirmidchecker").html("*Password Didnt Matched");
+        $("#confirmidchecker").cssL("color", "red");
+        confirmerror = false;
+        return false;
+      } else {
+        $("#confirmidchecker").hide;
+      }
+    }
+    $("#submitbtn").click(function () {
+      validatename();
+      validatepassword();
+      validatepassword();
+      validatecomfirmpassword();
+      if (
+        userchecker == true &&
+        emailerror == true &&
+        passworderror == true &&
+        confirmerror == true
+      ) {
+        $("#formsubmit").submit(function (evt) {
+          evt.preventDefault();
+          window.history.back();
+        });
+        return true;
+      } else {
+        return false;
+      }
+    });
+  });
+</script>

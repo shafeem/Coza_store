@@ -10,8 +10,10 @@ const categoryscema= new mongoose.Schema({
     },
     message:{
         type:String
+    },
+    offer:{
+        type:Number,
     }
-
 },{timestamps:true})
 
 const Category = mongoose.model('Category',categoryscema)
