@@ -828,7 +828,7 @@ const coupondelete = async (req, res) => {
   }
 };
 const orderapproval = async (req, res) => {
-  console.log(req.body, "lllllllllllllllllllll");
+  console.log(req.body);
 
   await orderscema.findByIdAndUpdate(req.body.id, {
     orderstatus: "Returned Success",
