@@ -819,8 +819,8 @@ const postcoupon = async (req, res) => {
 };
 const coupondelete = async (req, res) => {
   try {
-    //   console.log(req.body.id);
-    // await couponscema.findByIdAndDelete({_id:req.body.id})
+      console.log(req.body.id);
+    await couponscema.findByIdAndDelete({_id:req.body.id})
     res.redirect("/admin/coupon");
   } catch (error) {
     console.log(error);

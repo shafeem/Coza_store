@@ -149,8 +149,13 @@ const usersignup = async (req, res) => {
       req.session.useralldata = req.body;
       console.log("sesssion data og user", req.session.useralldata);
 
-      if(req.body.name && req.body.email && req.body.phone && req.body.password && req.body.confirmpassword){
-
+      if (
+        req.body.name &&
+        req.body.email &&
+        req.body.phone &&
+        req.body.password &&
+        req.body.confirmpassword
+      ) {
         const phone = req.body.phone;
         sendsms(phone);
         res.redirect("/otp");
@@ -161,15 +166,14 @@ const usersignup = async (req, res) => {
     res.redirect("/error");
   }
 };
-const resent=(req,res)=>{
+const resent = (req, res) => {
   try {
-  res.render("user/otp")
-    
+    res.render("user/otp");
   } catch (error) {
     console.log(error);
-    res.redirect("/error"); 
+    res.redirect("/error");
   }
-}
+};
 const otpverifyer = async (req, res) => {
   try {
     console.log(req.body.otp, mobil);
@@ -205,7 +209,7 @@ const otpverifyer = async (req, res) => {
 
 const userlogin = async (req, res) => {
   try {
-    console.log(req.body,'llllllllllll')
+    console.log(req.body, "llllllllllll");
     let userp = req.body.password;
     let usere = req.body.email;
     const user1 = await userscema.findOne({ email: usere });
@@ -759,7 +763,7 @@ const checkout = async (req, res) => {
         cartdt,
         address,
         pic,
-        idPaypal
+        idPaypal,
       });
     }
   } catch (error) {
@@ -1113,105 +1117,57 @@ const couponverify = async (req, res) => {
       res.json({ status: false, msg });
     } else {
       console.log(coupon[0].useduser, ";;;;;;;;;;;;;;;");
-      if (coupon[0].useduser.length==0) {
-        console.log('llllllllllllllllllllljjjjjjjjjjjjjj');
+      if (coupon[0].useduser.length == 0) {
+        console.log("no one used this coupon");
         let todaydate = new Date().toLocaleDateString();
-          let maximumRedeemAmount = coupon[0].maximumRedeemAmount;
-          console.log(maximumRedeemAmount, "this is maximum redeem amount");
-          let minimumCartAmount = coupon[0].minimumCartAmount;
-          console.log(minimumCartAmount, "sdfghjkl");
-          let amount = coupon[0].amount;
-          let available = coupon[0].available;
-  
-          let expirydate = coupon[0].expiryDate.toLocaleDateString();
-          console.log(expirydate, "this is expiry date");
-          console.log(todaydate, "this is today date");
-  
-          if (available > 0) {
-            console.log("coupon have no count");
-            console.log(available);
-            if (todaydate <= expirydate) {
-              console.log("1111111");
-              if (ctotal < minimumCartAmount) {
-                console.log("22222222");
-                msg =
-                  "Minimum Rs." +
-                  minimumCartAmount +
-                  " need to Apply this Coupon";
-                res.json({ status: false, msg });
-              } else {
-                grandtotal = ctotal - amount;
-                req.session.grandtotal = grandtotal;
-                res.json({ status: true, grandtotal, amount });
-              }
-            } else {
-              console.log("coupon expired");
-              msg = "This Coupon Is Expired";
+        let maximumRedeemAmount = coupon[0].maximumRedeemAmount;
+        console.log(maximumRedeemAmount, "this is maximum redeem amount");
+        let minimumCartAmount = coupon[0].minimumCartAmount;
+        console.log(minimumCartAmount, "sdfghjkl");
+        let amount = coupon[0].amount;
+        let available = coupon[0].available;
+
+        let expirydate = coupon[0].expiryDate.toLocaleDateString();
+        console.log(expirydate, "this is expiry date");
+        console.log(todaydate, "this is today date");
+
+        if (available > 0) {
+          console.log("coupon have count");
+          console.log(available);
+          if (todaydate <= expirydate) {
+            console.log("expiry greater than today date");
+            if (ctotal < minimumCartAmount) {
+              console.log("22222222");
+              msg =
+                "Minimum Rs." +
+                minimumCartAmount +
+                " need to Apply this Coupon";
               res.json({ status: false, msg });
-            }
-          }
-          await couponscema.findOneAndUpdate({
-            code: coupencode,
-            status: "active",
-            useduser: [
-              {
-                owner: req.session.userdata._id,
-              },
-            ],
-          });
-      } else {
-        console.log(coupon[0].useduser[0], "22222222222");
-        if ((coupon[0].useduser[0].owner.length == 0, "3333333333333")) {
-          let todaydate = new Date().toLocaleDateString();
-          let maximumRedeemAmount = coupon[0].maximumRedeemAmount;
-          console.log(maximumRedeemAmount, "this is maximum redeem amount");
-          let minimumCartAmount = coupon[0].minimumCartAmount;
-          console.log(minimumCartAmount, "sdfghjkl");
-          let amount = coupon[0].amount;
-          let available = coupon[0].available;
-  
-          let expirydate = coupon[0].expiryDate.toLocaleDateString();
-          console.log(expirydate, "this is expiry date");
-          console.log(todaydate, "this is today date");
-  
-          if (available > 0) {
-            console.log("coupon have no count");
-            console.log(available);
-            if (todaydate <= expirydate) {
-              console.log("1111111");
-              if (ctotal < minimumCartAmount) {
-                console.log("22222222");
-                msg =
-                  "Minimum Rs." +
-                  minimumCartAmount +
-                  " need to Apply this Coupon";
-                res.json({ status: false, msg });
-              } else {
-                grandtotal = ctotal - amount;
-                req.session.grandtotal = grandtotal;
-                res.json({ status: true, grandtotal, amount });
-              }
             } else {
-              console.log("coupon expired");
-              msg = "This Coupon Is Expired";
-              res.json({ status: false, msg });
+              grandtotal = ctotal - amount;
+              req.session.grandtotal = grandtotal;
+              res.json({ status: true, grandtotal, amount });
             }
+          } else {
+            console.log("coupon expired");
+            msg = "This Coupon Is Expired";
+            res.json({ status: false, msg });
           }
-          await couponscema.findOneAndUpdate({
-            code: coupencode,
-            status: "active",
-            useduser: [
-              {
-                owner: req.session.userdata._id,
-              },
-            ],
-          });
-          // res.json({status:true})
-        } else {
-          res.json({ used: true });
-        } 
+        }
+        let newone= await couponscema.findOneAndUpdate({
+          code: coupencode,
+          status: "active",
+          useduser: [
+            {
+              owner: req.session.userdata._id,
+            },
+          ],
+        });
+        console.log(newone,'this is the new coupon');
+      }else{
+        console.log('else if working kkkkk');
+        if(coupon[0].useduser.owner){}
       }
-      
     }
     console.log("coupon comleated");
   } catch (error) {
