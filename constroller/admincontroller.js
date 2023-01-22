@@ -960,7 +960,7 @@ const piechart=async(req,res)=>{
   }
 }
 
-// bar chart details
+// bar chart details is starting from here
 const chartdetails = async (req, res) => {
   try{
      const value = req.query.value;
