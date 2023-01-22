@@ -1110,6 +1110,8 @@ const couponverify = async (req, res) => {
       code: coupencode,
       status: "active",
     });
+    console.log(coupon[0].useduser[0], "111111111111112222222222222");
+    console.log(coupon.used, "111111111111112222222222222");
     console.log(coupon, "111111111111112222222222222");
 
     if (coupon.length == 0) {
@@ -1157,6 +1159,8 @@ const couponverify = async (req, res) => {
         let newone= await couponscema.findOneAndUpdate({
           code: coupencode,
           status: "active",
+        },
+        {
           useduser: [
             {
               owner: req.session.userdata._id,
@@ -1210,6 +1214,8 @@ const couponverify = async (req, res) => {
           let newone= await couponscema.findOneAndUpdate({
             code: coupencode,
             status: "active",
+          },
+          {
             useduser: [
               {
                 owner: req.session.userdata._id,
