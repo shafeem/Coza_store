@@ -1160,13 +1160,64 @@ const couponverify = async (req, res) => {
           useduser: [
             {
               owner: req.session.userdata._id,
-            },
+            }, 
           ],
         });
         console.log(newone,'this is the new coupon');
       }else{
         console.log('else if working kkkkk');
-        if(coupon[0].useduser.owner){}
+        console.log(coupon[0].useduser[0].owner,"sesssion data og user", req.session.userdata._id);
+        if(coupon[0].useduser[0].owner==req.session.userdata._id){
+          console.log('this is used coupon');
+          res.json({ used: true });
+        }else{
+          console.log("one user not used this coupon check this");
+          let todaydate = new Date().toLocaleDateString();
+          let maximumRedeemAmount = coupon[0].maximumRedeemAmount;
+          console.log(maximumRedeemAmount, "this is maximum redeem amount");
+          let minimumCartAmount = coupon[0].minimumCartAmount;
+          console.log(minimumCartAmount, "sdfghjkl");
+          let amount = coupon[0].amount;
+          let available = coupon[0].available;
+  
+          let expirydate = coupon[0].expiryDate.toLocaleDateString();
+          console.log(expirydate, "this is expiry date");
+          console.log(todaydate, "this is today date");
+  
+          if (available > 0) {
+            console.log("coupon have count");
+            console.log(available);
+            if (todaydate <= expirydate) {
+              console.log("expiry greater than today date");
+              if (ctotal < minimumCartAmount) {
+                console.log("22222222");
+                msg =
+                  "Minimum Rs." +
+                  minimumCartAmount +
+                  " need to Apply this Coupon";
+                res.json({ status: false, msg });
+              } else {
+                grandtotal = ctotal - amount;
+                req.session.grandtotal = grandtotal;
+                res.json({ status: true, grandtotal, amount });
+              }
+            } else {
+              console.log("coupon expired");
+              msg = "This Coupon Is Expired";
+              res.json({ status: false, msg });
+            }
+          }
+          let newone= await couponscema.findOneAndUpdate({
+            code: coupencode,
+            status: "active",
+            useduser: [
+              {
+                owner: req.session.userdata._id,
+              }, 
+            ],
+          });
+          console.log(newone,'this is the new coupon');
+        }
       }
     }
     console.log("coupon comleated");
@@ -1184,13 +1235,15 @@ const orderreturn = async (req, res) => {
     track: "Returned",
   });
   console.log(order, ",.,.,.,.,.,.,.,.,.,.,");
-  // let productdetail = order.products;
+  let productdetail = order.products;
   // // product count decreasing
-  // productdetail.forEach(async (el) => {
-  //   await productscema.findOneAndUpdate(
-  //     { _id: el.product },
-  //     { $inc: { stock: -el.quantity } }
-  //   );
+  let productnew;
+  productdetail.forEach(async (el) => {
+    productnew= await productscema.findOneAndUpdate(
+      { _id: el.product },
+      { $inc: { stock: -el.quantity } }
+    )});
+    console.log('this is product after',productnew);
 };
 const paypalorder = async (req, res) => {
   const request = new paypal.orders.OrdersCreateRequest();

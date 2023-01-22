@@ -60,9 +60,15 @@
       href="/signup/fonts/material-design-iconic-font/css/material-design-iconic-font.min.css"
     />
 
-	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap"
+      rel="stylesheet"
+    />
 
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
 
     <!-- STYLE CSS -->
     <link rel="stylesheet" href="/signup/css/style.css" />
@@ -78,12 +84,10 @@
           <img src="/signup/images/registration-form-1.jpg" alt="" />
         </div>
 
-        <form action="/signup" method="post" id="formsubmit">
-          <h3>Registration Form</h3>
+        <div id="error"></div>
 
-          <% if (errs) { %>
-          <h6 class="text-danger"><%= errs %></h6>
-          <% } %>
+        <form action="/signup" method="post" id="signupForm">
+          <h3>Registration Form</h3>
 
           <div class="form-wrapper">
             <input
@@ -91,12 +95,12 @@
               placeholder="Username"
               class="form-control"
               name="name"
-              id="nameid"
+              id="fullname"
+              required
             />
+            <p id="usercheck" style="color: red">**Username is missing</p>
             <i class="zmdi zmdi-account"></i>
           </div>
-
-          <p id="userchecker"></p>
 
           <div class="form-wrapper">
             <input
@@ -104,8 +108,26 @@
               placeholder="Email Address"
               class="form-control"
               name="email"
-              id="emailid"
+              id="email"
+              required
+              pattern="[^@]+@[^@]+.[a-zA-Z]{2,6}"
             />
+            <% if (errs) { %>
+            <small
+              id="emailvalid"
+              class="form-text text-muted invalid-feedback"
+            >
+              <%= errs %>
+            </small>
+            <% } else { %>
+            <small
+              id="emailvalid"
+              class="form-text text-muted invalid-feedback"
+            >
+              Your email must be a valid email
+            </small>
+            <% } %>
+
             <i class="zmdi zmdi-email"></i>
           </div>
 
@@ -115,7 +137,8 @@
               placeholder="Phone Number"
               class="form-control"
               name="phone"
-              id="phoneid"
+              id="mobilenumber"
+              required
             />
             <i class="zmdi zmdi-account"></i>
           </div>
@@ -126,11 +149,12 @@
               placeholder="Password"
               class="form-control"
               name="password"
-              id="passwordid"
+              id="password"
+              required
             />
+            <p id="passcheck" style="color: red">**Please Fill the password</p>
             <i class="zmdi zmdi-lock"></i>
           </div>
-          <p id="passwordchecker"></p>
 
           <div class="form-wrapper">
             <input
@@ -138,14 +162,14 @@
               placeholder="Confirm Password"
               class="form-control"
               name="confirmpassword"
-              id="confirmid"
+              id="confirmpassword"
+              required
             />
+            <p id="conpasscheck" style="color: red">**Password didn't match</p>
             <i class="zmdi zmdi-lock"></i>
           </div>
-          <p id="confirmidchecker"></p>
-          <!-- <input type="submit" class="fadeIn fourth mt-4 b" value="Signup" />
-         -->
-          <button type="submit" id="submitbtn">
+
+          <button id="submitbtn">
             Register
             <i class="zmdi zmdi-arrow-right"></i>
           </button>
@@ -160,100 +184,120 @@
   integrity="sha256-nQLuAZGRRcILA+6dMBOvcRh5Pe310sBpanc6+QBmyVM="
   crossorigin="anonymous"
 ></script>
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"
-  integrity="sha512-rstIgDs0xPgmG6RX1Aba4KV5cWJbAMcvRCVmglpam9SoHZiUCyQVDdH2LPlxoHtrv17XWblE/V/PP+Tr04hbtA=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"
-></script>
 
 <script>
   $(document).ready(function () {
-    // checking username
-    $("#userchecker").hide();
-    let userchecker = true;
-    $("#nameid").keyup(function () {
-      validatename();
+    // Validate Username
+    $("#usercheck").hide();
+    let usernameError = true;
+    $("#fullname").keyup(function () {
+      validateUsername();
     });
 
-    function validatename() {
-      let name = $("#nameid").val();
-      if (name.length == "") {
-        $("#userchecker").show();
-        userchecker = false;
+    function validateUsername() {
+      let usernameValue = $("#fullname").val();
+      if (usernameValue.length == "") {
+        $("#usercheck").show();
+        usernameError = false;
         return false;
-      } else if (name.length <= 3) {
-        $("#usercheker").show();
-        $("#userchecker").html("* Name Length Must Be Greater Than 3");
-        userchecker = false;
+      } else if (usernameValue.length < 3 || usernameValue.length > 10) {
+        $("#usercheck").show();
+        $("#usercheck").html("**length of username must be between 3 and 10");
+        usernameError = false;
         return false;
       } else {
-        $("#usercheker").hide();
+        $("#usercheck").hide();
       }
     }
-    const email = getElementById("emailid");
-    email.addEventListener("blur", () => {
-      let regex = /^([\-\.0-9a-zA-Z]+)@([\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
-      let emailvalue = email.value;
-      if (regex.test(emailvalue)) {
-        email.classList.remove("is-invalid");
-        emailerror = true;
-      } else {
-        email.classList.add("is-invalid");
-        emailerror = false;
+
+    //   Validate Email
+    async function validateEmail() {
+      const email = document.getElementById("email");
+      email.addEventListener("blur", () => {
+        let regex = /^([\-\.0-9a-zA-Z]+)@([\-\.0-9a-zA-Z]+)\.([a-zA-Z]){2,7}$/;
+        let s = email.value;
+        if (regex.test(s)) {
+          email.classList.remove("is-invalid");
+          emailError = true;
+        } else {
+          email.classList.add("is-invalid");
+          emailError = false;
+        }
+      });
+    }
+
+    // Validate Password
+    $("#passcheck").hide();
+    let passwordError = true;
+    $("#password").keyup(function () {
+      validatePassword();
+    });
+    async function validatePassword() {
+      let passwordValue = $("#password").val();
+      if (passwordValue.length == "") {
+        $("#passcheck").show();
+        passwordError = false;
+        return false;
       }
-    });
-    $("#passwordchecker").hide();
-    let passworderror = true;
-    $("#passwordid").keyup(function () {
-      validatepassword();
-    });
-    async function validatepassword() {
-      let passwordvalue = $("#passwordid").val();
-      if (passwordvalue == "") {
-        $("#passwordchecker").show();
-        passworderror = false;
+      if (passwordValue.length < 3 || passwordValue.length > 10) {
+        $("#passcheck").show();
+        $("#passcheck").html(
+          "**length of your password must be between 3 and 10"
+        );
+        $("#passcheck").css("color", "red");
+        passwordError = false;
         return false;
-      } else if (passwordvalue <= 3) {
-        $("#passwordchecker").show();
-        $("#passwordchecker").html("*Password Length Must Be Greater Than 3");
-        $("#passwordchecker").css("color", "red");
-        passworderror = false;
+      }
+      let res = await containsSpecialChars(passwordValue);
+      console.log(res);
+      if (res === false) {
+        $("#passcheck").show();
+        $("#passcheck").html("Password must contain special characters");
+        $("#passcheck").css("color", "red");
+        passwordError = false;
         return false;
       } else {
-        $("#passwordchecker").hide();
+        $("#passcheck").hide();
       }
     }
-    $("#confirmidchecker").hide();
-    let confirmerror = true;
-    $("#confirmid").keyup(function () {
-      validatecomfirmpassword();
+    function containsSpecialChars(str) {
+      const specialChars = /[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+      return specialChars.test(str);
+    }
+    // Validate Confirm Password
+    $("#conpasscheck").hide();
+    let confirmPasswordError = true;
+    $("#confirmpassword").keyup(function () {
+      validateConfirmPassword();
     });
-    function validatecomfirmpassword() {
-      let confirmvalue = $("#confirmid").val();
-      let passwordvalue = $("#passwordid").val();
-      if (confirmvalue != passwordvalue) {
-        $("#confirmidchecker").show();
-        $("#confirmidchecker").html("*Password Didnt Matched");
-        $("#confirmidchecker").cssL("color", "red");
-        confirmerror = false;
+    function validateConfirmPassword() {
+      let confirmPasswordValue = $("#confirmpassword").val();
+      let passwordValue = $("#password").val();
+
+      if (passwordValue != confirmPasswordValue) {
+        $("#conpasscheck").show();
+        $("#conpasscheck").html("**Password didn't Match");
+        $("#conpasscheck").css("color", "red");
+        confirmPasswordError = false;
         return false;
       } else {
-        $("#confirmidchecker").hide;
+        $("#conpasscheck").hide();
       }
     }
+
+    // Submit button
     $("#submitbtn").click(function () {
-      validatename();
-      validatepassword();
-      validatepassword();
-      validatecomfirmpassword();
+      validateUsername();
+      validatePassword();
+      validateConfirmPassword();
+      validateEmail();
       if (
-        userchecker == true &&
-        emailerror == true &&
-        passworderror == true &&
-        confirmerror == true
+        usernameError == true &&
+        passwordError == true &&
+        confirmPasswordError == true &&
+        emailError == true
       ) {
-        $("#formsubmit").submit(function (evt) {
+        $("#signupForm").submit(function (evt) {
           evt.preventDefault();
           window.history.back();
         });
