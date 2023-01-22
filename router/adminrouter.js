@@ -39,7 +39,8 @@ const {
     salesreport,
     monthlyreport,
     yearlyreport,
-
+    piechart,
+    chartdetails,
 }=require('../constroller/admincontroller')
 
 
@@ -72,6 +73,8 @@ router.get('/addcoupon',adminsession,addcoupon)
 router.get("/salesreport",adminsession,salesreport)
 router.get('/monthlyreport',adminsession,monthlyreport)
 router.get('/yearlyreport',adminsession,yearlyreport)
+router.get('/piechart',adminsession,piechart)
+router.get('/chartdetails',adminsession,chartdetails)
 
 router.post('/',adminlogger)
 router.post('/addcategory',imagemulter.array('imageurl',3),adminsession,postcategory)

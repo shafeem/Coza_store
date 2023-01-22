@@ -14,25 +14,25 @@ const moment = require("moment");
 
 const admindashbord = async (req, res) => {
   try {
-
-    let order = await orderscema.find().count()
+    let order = await orderscema.find().count();
     let price = await orderscema.aggregate([
       { $match: { orderstatus: "Delivered" } },
-     {$group:{_id:order._id,
-    total:{$sum:"$totalprice"}}},{
-      $project:{_id:0}
-    }
+      { $group: { _id: order._id, total: { $sum: "$totalprice" } } },
+      {
+        $project: { _id: 0 },
+      },
     ]);
-    let sales= await orderscema.aggregate([
-      { $match: { orderstatus: "Delivered" } }])
+    let sales = await orderscema.aggregate([
+      { $match: { orderstatus: "Delivered" } },
+    ]);
     console.log(sales, "this is the orderfffffffffff");
     let user = await userscema.find({});
 
-    let preturn=await orderscema.aggregate([
-      {$match:{orderstatus:'Returned Success'}}
-    ])
+    let preturn = await orderscema.aggregate([
+      { $match: { orderstatus: "Returned Success" } },
+    ]);
 
-    console.log(preturn, "this is;;;;;;erfffffffffff");
+    console.log(price, "this is;;;;;;erfffffffffff");
 
     res.render("admin/dashbord", {
       // order,
@@ -819,8 +819,8 @@ const postcoupon = async (req, res) => {
 };
 const coupondelete = async (req, res) => {
   try {
-      console.log(req.body.id);
-    await couponscema.findByIdAndDelete({_id:req.body.id})
+    console.log(req.body.id);
+    await couponscema.findByIdAndDelete({ _id: req.body.id });
     res.redirect("/admin/coupon");
   } catch (error) {
     console.log(error);
@@ -843,9 +843,9 @@ const orderapproval = async (req, res) => {
 
   res.json({ status: true });
 };
-const salesreport=async(req,res)=>{
-  console.log('this is sales report page');
-  let order=await orderscema.find({})
+const salesreport = async (req, res) => {
+  console.log("this is sales report page");
+  let order = await orderscema.find({});
   console.log(order);
   const salesreport = await orderscema.aggregate([
     {
@@ -862,18 +862,17 @@ const salesreport=async(req,res)=>{
         products: { $sum: { $size: "$products.quantity" } },
         count: { $sum: 1 },
       },
-     
     },
     { $sort: { date: -1 } },
   ]);
   console.log(salesreport);
-  res.render('admin/salesreport',{
+  res.render("admin/salesreport", {
     order,
     salesreport,
-  })
-}
-const monthlyreport=async (req,res)=>{
-  try{
+  });
+};
+const monthlyreport = async (req, res) => {
+  try {
     const months = [
       "January",
       "February",
@@ -912,7 +911,7 @@ const monthlyreport=async (req,res)=>{
     res.render("admin/error");
     console.log(error);
   }
-}
+};
 const yearlyreport = async (req, res) => {
   try {
     const salesreport = await orderscema.aggregate([
@@ -941,7 +940,178 @@ const yearlyreport = async (req, res) => {
     res.render("admin/error");
   }
 };
+const piechart=async(req,res)=>{
+  try {
+    let delivery=await orderscema.find({orderstatus:'Delivered'}).count()
+    let cancell=await orderscema.find({orderstatus:'Cancelled'}).count()
+    let returned=await orderscema.find({orderstatus:'Returned'}).count()
 
+    let data=[]
+    data.push(delivery)
+    data.push(cancell)
+    data.push(returned)
+
+    console.log(data,'this is the datallllllllllll');
+
+    res.json({data})
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// bar chart details
+const chartdetails = async (req, res) => {
+  try{
+     const value = req.query.value;
+     var date = new Date();
+     var month = date.getMonth();
+     var year = date.getFullYear();
+     let sales = [];
+     if (value == 365) {
+       year = date.getFullYear();
+       var currentYear = new Date(year, 0, 1);
+       let salesByYear = await orderscema.aggregate([
+         {
+           $match: {
+             createdAt: { $gte: currentYear },
+             orderstatus: { $eq: "Delivered" },
+           },
+         },
+         {
+           $group: {
+             _id: { $dateToString: { format: "%m", date: "$createdAt" } },
+             totalPrice: { $sum: "$totalprice" },
+             count: { $sum: 1 },
+           },
+         },
+         { $sort: { _id: 1 } },
+       ]);
+       for (let i = 1; i <= 12; i++) {
+         let result = true;
+         for (let k = 0; k < salesByYear.length; k++) {
+           result = false;
+           if (salesByYear[k]._id == i) {
+             sales.push(salesByYear[k]);
+             break;
+           } else {
+             result = true;
+           }
+         }
+         if (result) sales.push({ _id: i, totalPrice: 0, count: 0 });
+       }
+       var lastYear = new Date(year - 1, 0, 1);
+        let salesData=[]
+       for (let i = 0; i < sales.length; i++) {
+         salesData.push(sales[i].totalPrice);
+       }
+       res.json({ status: true, sales:salesData})
+     } else if (value == 30) {
+ 
+ 
+       console.log("month");
+       let firstDay = new Date(year, month, 1);
+       firstDay = new Date(firstDay.getTime() + 1 * 24 * 60 * 60 * 1000);
+       let nextWeek = new Date(firstDay.getTime() + 7 * 24 * 60 * 60 * 1000);
+      
+       for (let i = 1; i <= 5; i++) {
+         let abc = {};
+         let salesByMonth = await orderscema.aggregate([
+           {
+             $match: {
+               createdAt: { $gte: firstDay, $lt: nextWeek },
+               orderstatus: { $eq: "Delivered" },
+             },
+           },
+           {
+             $group: {
+               _id: moment(firstDay).format("DD-MM-YYYY"),
+               totalPrice: { $sum: "$totalprice" },
+               count: { $sum: 1 },
+             },
+           },
+         ]);
+         if (salesByMonth.length) {
+           sales.push(salesByMonth[0]);
+         } else {
+           (abc._id = moment(firstDay).format("DD-MM-YYYY")),
+             (abc.totalPrice = 0);
+           abc.count = 0;
+           sales.push(abc);
+         }
+   
+         firstDay = nextWeek;
+         if (i == 4) {
+           nextWeek = new Date(
+             firstDay.getFullYear(),
+             firstDay.getMonth() + 1,
+             1
+           );
+         } else {
+           nextWeek = new Date(
+             firstDay.getFullYear(),
+             firstDay.getMonth() + 0,
+             (i + 1) * 7
+           );
+         }
+       }
+    
+         let salesData=[]
+       for (let i = 0; i < sales.length; i++) {
+         salesData.push(sales[i].totalPrice);  
+       }
+       res.json({ status: true, sales:salesData})
+     } else if (value == 7) {
+ 
+       let today = new Date();
+       let lastDay = new Date(today.getTime() - 1 * 24 * 60 * 60 * 1000);
+       for (let i = 1; i <= 7; i++) {
+         let abc = {};
+         let salesByWeek = await orderscema.aggregate([
+           {
+             $match: {
+               createdAt: { $lt: today, $gte: lastDay },
+               orderstatus: { $eq: "Delivered" },
+             },
+           },
+           {
+             $group: {
+               _id:  moment(today).format("DD-MM-YYYY"),
+               totalPrice: { $sum: "$totalprice" },
+               count: { $sum: 1 },
+             },
+           },
+         ]);
+         if (salesByWeek.length) {
+           sales.push(salesByWeek[0]);
+         } else {
+           abc._id = today.getDay() + 1;
+           abc.totalPrice = 0;
+           abc.count = 0;
+           sales.push(abc);
+         }
+ 
+         
+         today = lastDay;
+         lastDay = new Date(
+           new Date().getTime() - (i + 1) * 24 * 60 * 60 * 1000
+         );
+       }
+      
+      let salesData=[]
+       for (let i = 0; i < sales.length; i++) {
+         salesData.push(sales[i].totalPrice);
+         
+       }
+   
+ 
+       res.json({ status: true,sales: salesData})
+     }
+   } catch (error) {
+     res.render("admin/error");
+   }
+ };
+ 
 
 module.exports = {
   admindashbord,
@@ -981,5 +1151,7 @@ module.exports = {
   orderapproval,
   salesreport,
   monthlyreport,
-  yearlyreport
+  yearlyreport,
+  piechart,
+  chartdetails,
 };

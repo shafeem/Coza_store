@@ -78,7 +78,7 @@
             <p
               class="text-lg font-semibold text-gray-700 dark:text-gray-200"
             >
-              
+             <%=  price[0].total %> 
             </p>
           </div>
         </div>
@@ -551,51 +551,62 @@
               <span
                 class="inline-block w-3 h-3 mr-1 bg-blue-500 rounded-full"
               ></span>
-              <span>Shirts</span>
+              <span>Delivered</span>
             </div>
             <div class="flex items-center">
               <span
                 class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"
               ></span>
-              <span>Shoes</span>
+              <span>Cancelled</span>
             </div>
             <div class="flex items-center">
               <span
                 class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"
               ></span>
-              <span>Bags</span>
+              <span>Returned</span>
             </div>
           </div>
         </div>
-        <div
-          class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800"
-        >
+        <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
           <h4 class="mb-4 font-semibold text-gray-800 dark:text-gray-300">
-            Traffic
+            Total sales
           </h4>
-          <canvas id="line"></canvas>
+          <div class="container-fluid px-0 py-1 float-end mt-0">
+            <select
+              id="salesChange"
+              onchange="ChartChange()"
+              style="
+                background: rgba(0, 0, 0, 0.3);
+                color: #fff;
+                text-shadow: 0 1px 0 rgba(0, 0, 0, 0.4);
+              "
+              class="float-end form-select-sm ps-4 pe-5"
+            >
+              <option value="7" selected>This week</option>
+              <option value="30">This Month</option>
+              <option value="365">This Year</option>
+            </select>
+          </div>
+          <div id="mainBar">
+            <canvas id="bars"></canvas>
+          </div>
+  
           <div
             class="flex justify-center mt-4 space-x-3 text-sm text-gray-600 dark:text-gray-400"
           >
             <!-- Chart legend -->
             <div class="flex items-center">
               <span
-                class="inline-block w-3 h-3 mr-1 bg-teal-600 rounded-full"
+                class="inline-block w-3 h-3 mr-1 bg-teal-500 rounded-full"
               ></span>
-              <span>Organic</span>
-            </div>
-            <div class="flex items-center">
-              <span
-                class="inline-block w-3 h-3 mr-1 bg-purple-600 rounded-full"
-              ></span>
-              <span>Paid</span>
+              <span>Orders</span>
             </div>
           </div>
         </div>
+        <!-- bars end -->
       </div>
     </div>
   </main>
-</div>
-</div>
+
 </body>
 </html>

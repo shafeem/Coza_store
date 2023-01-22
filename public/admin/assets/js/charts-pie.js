@@ -1,12 +1,18 @@
 /**
  * For usage, visit Chart.js docs https://www.chartjs.org/docs/latest/
  */
+
+
+$(document).ready(async () => {
+  const response = await axios.get("/admin/piechart");
+  if (response.data.data) {
+    const groupedOrderData = response.data.data;
 const pieConfig = {
   type: 'doughnut',
   data: {
     datasets: [
       {
-        data: [33, 33, 33],
+        data:groupedOrderData,
         /**
          * These colors come from Tailwind CSS palette
          * https://tailwindcss.com/docs/customizing-colors/#default-color-palette
@@ -15,7 +21,7 @@ const pieConfig = {
         label: 'Dataset 1',
       },
     ],
-    labels: ['Shoes', 'Shirts', 'Bags'],
+    labels: ['Cancelled', 'Delivered', 'Returned'],
   },
   options: {
     responsive: true,
@@ -33,3 +39,5 @@ const pieConfig = {
 // change this to the id of your chart element in HMTL
 const pieCtx = document.getElementById('pie')
 window.myPie = new Chart(pieCtx, pieConfig)
+}
+});
