@@ -41,6 +41,7 @@ const {
   postorderview,
   blockchecker,
   resent,
+  searchresult,
 } = require("../constroller/usercontroller");
 
 const router = express.Router();
@@ -75,6 +76,8 @@ router.post("/address", sessionchecker,blockchecker, postaddress);
 router.post("/editaddress/:id", sessionchecker,blockchecker, posteditaddress);
 router.post("/payment", sessionchecker,blockchecker, payment);
 router.post("/orderdetails/:id", sessionchecker,blockchecker,postorderview)
+router.post('/getresult',sessionchecker,blockchecker,searchresult)
+
 
 router.delete("/removefromcart", sessionchecker,blockchecker, removefromcart);
 router.delete("/deleteaddress", sessionchecker,blockchecker, deleteaddress);

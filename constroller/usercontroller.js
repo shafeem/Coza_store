@@ -101,6 +101,12 @@ const uhome = async (req, res) => {
 
 const uproduct = async (req, res) => {
   try {
+    const typedata = {
+      typelisting: "listing",
+      key: null,
+    };
+    console.log("this is the typedata", typedata);
+
     let productdts;
     let item = req.query.sort;
     let allproduct = res.pagenation.results;
@@ -109,6 +115,19 @@ const uproduct = async (req, res) => {
     if (item) {
       productdts = await productscema.find({ category: { $eq: item } });
       console.log("asdfghjklsdfghjklsdfghjkl");
+    } else if (req.query.q) {
+      (typedata.typelisting = "qlisting"), (typedata.key = req.query.q);
+      console.log("after changing the value", typedata);
+
+      const proid = req.query.q;
+      allproduct = await productscema.find({ _id: proid });
+      console.log(allproduct,'this is new all product');
+
+      productdts = allproduct;
+      console.log(
+        "this is the new productdts check this one    skkkkkkkkkkkkk"
+      );
+
     } else {
       productdts = allproduct;
       console.log("this is productdtskkkkkkkkkkkkk");
@@ -1156,25 +1175,31 @@ const couponverify = async (req, res) => {
             res.json({ status: false, msg });
           }
         }
-        let newone= await couponscema.findOneAndUpdate({
-          code: coupencode,
-          status: "active",
-        },
-        {
-          useduser: [
-            {
-              owner: req.session.userdata._id,
-            }, 
-          ],
-        });
-        console.log(newone,'this is the new coupon');
-      }else{
-        console.log('else if working kkkkk');
-        console.log(coupon[0].useduser[0].owner,"sesssion data og user", req.session.userdata._id);
-        if(coupon[0].useduser[0].owner==req.session.userdata._id){
-          console.log('this is used coupon');
+        let newone = await couponscema.findOneAndUpdate(
+          {
+            code: coupencode,
+            status: "active",
+          },
+          {
+            useduser: [
+              {
+                owner: req.session.userdata._id,
+              },
+            ],
+          }
+        );
+        console.log(newone, "this is the new coupon");
+      } else {
+        console.log("else if working kkkkk");
+        console.log(
+          coupon[0].useduser[0].owner,
+          "sesssion data og user",
+          req.session.userdata._id
+        );
+        if (coupon[0].useduser[0].owner == req.session.userdata._id) {
+          console.log("this is used coupon");
           res.json({ used: true });
-        }else{
+        } else {
           console.log("one user not used this coupon check this");
           let todaydate = new Date().toLocaleDateString();
           let maximumRedeemAmount = coupon[0].maximumRedeemAmount;
@@ -1183,11 +1208,11 @@ const couponverify = async (req, res) => {
           console.log(minimumCartAmount, "sdfghjkl");
           let amount = coupon[0].amount;
           let available = coupon[0].available;
-  
+
           let expirydate = coupon[0].expiryDate.toLocaleDateString();
           console.log(expirydate, "this is expiry date");
           console.log(todaydate, "this is today date");
-  
+
           if (available > 0) {
             console.log("coupon have count");
             console.log(available);
@@ -1211,18 +1236,20 @@ const couponverify = async (req, res) => {
               res.json({ status: false, msg });
             }
           }
-          let newone= await couponscema.findOneAndUpdate({
-            code: coupencode,
-            status: "active",
-          },
-          {
-            useduser: [
-              {
-                owner: req.session.userdata._id,
-              }, 
-            ],
-          });
-          console.log(newone,'this is the new coupon');
+          let newone = await couponscema.findOneAndUpdate(
+            {
+              code: coupencode,
+              status: "active",
+            },
+            {
+              useduser: [
+                {
+                  owner: req.session.userdata._id,
+                },
+              ],
+            }
+          );
+          console.log(newone, "this is the new coupon");
         }
       }
     }
@@ -1245,11 +1272,12 @@ const orderreturn = async (req, res) => {
   // // product count decreasing
   let productnew;
   productdetail.forEach(async (el) => {
-    productnew= await productscema.findOneAndUpdate(
+    productnew = await productscema.findOneAndUpdate(
       { _id: el.product },
       { $inc: { stock: -el.quantity } }
-    )});
-    console.log('this is product after',productnew);
+    );
+  });
+  console.log("this is product after", productnew);
 };
 const paypalorder = async (req, res) => {
   const request = new paypal.orders.OrdersCreateRequest();
@@ -1320,6 +1348,34 @@ const paypalpayment = async (req, res) => {
     console.log(error);
   }
 };
+const searchresult = async (req, res) => {
+  try {
+    const result = [];
+    console.log(req.body.payload, "this is the payload value");
+    const skey = req.body.payload;
+    const regex = new RegExp("^" + skey + ".*", "i");
+    const pros = await productscema.aggregate([
+      {
+        $match: {
+          $or: [{ product_name: regex }, { discription: regex }],
+        },
+      },
+    ]);
+
+    console.log(pros, "this is the pros check those");
+    pros.forEach((val, i) => {
+      result.push({ title: val.product_name, type: "product", id: val._id });
+    });
+    console.log(result);
+
+    const nresult = result.slice(0, 5);
+    console.log(nresult, "this is the new result");
+
+    res.send({ payload: nresult });
+  } catch (error) {
+    console.log(error);
+  }
+};
 module.exports = {
   ulogin,
   uhome,
@@ -1360,4 +1416,5 @@ module.exports = {
   postorderview,
   blockchecker,
   resent,
+  searchresult,
 };
