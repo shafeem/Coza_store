@@ -124,7 +124,7 @@ const uproduct = async (req, res) => {
       console.log(allproduct,'this is new all product');
 
       productdts = allproduct;
-      // hello
+ 
       console.log(
         "this is the new productdts check this one    skkkkkkkkkkkkk"
       );
